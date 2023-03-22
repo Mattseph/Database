@@ -131,12 +131,11 @@ CREATE TABLE
 
  CREATE TABLE 
 	`voter_information` (
-		`voter_information_id` int(11) NOT NULL AUTO_INCREMENT,
+		`voter_no` varchar(20) NOT NULL,
 		`resident_id` int(11) NOT NULL,
 		`voter_status` varchar(20) NOT NULL,
-        `voter_no` varchar(20) DEFAULT NULL,
         `precinct_number` varchar(20) DEFAULT NULL,
-        PRIMARY KEY(`voter_information_id`),
+        PRIMARY KEY(`voter_no`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
 	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
@@ -264,7 +263,7 @@ CREATE TABLE
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
-    `user` (
+    `users` (
         `user_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `official_id` int(11) NOT NULL,

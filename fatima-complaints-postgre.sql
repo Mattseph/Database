@@ -122,10 +122,9 @@ CREATE TABLE
 
 CREATE TABLE 
     voter_information (
-        voter_information_id serial PRIMARY KEY,
+        voter_no varchar(20) PRIMARY KEY,
         resident_id integer NOT NULL,
         voter_status varchar(20) NOT NULL,
-        voter_no varchar(20),
         precinct_number varchar(20),
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
     );
