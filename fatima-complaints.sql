@@ -54,6 +54,48 @@ CREATE TABLE
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
+    `barangay_clearance` (
+        `brgy_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
+        `resident_id` int(11) NOT NULL,
+        `purpose` varchar(50) NOT NULL,
+        `receipt_number` int(8) NOT NULL,
+        `cedula_number` varchar(8) NOT NULL,
+        `cedula_issued_at` varchar(50) NOT NULL,
+        `cedula_date` date NOT NULL,
+        `issued_by` varchar(50) NOT NULL,
+        `date_issued` datetime NOT NULL DEFAULT current_timestamp(),
+        `price` varchar(255) NOT NULL,
+        PRIMARY KEY(`brgy_clearance_id`),
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE
+    `business_clearance` (
+        `bus_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
+        `resident_id` int(11) NOT NULL,
+        `location` varchar(255) NOT NULL,
+        `bus_name` varchar(155) NOT NULL,
+        `date_issued` date NOT NULL,
+        `receipt_number` varchar(155) NOT NULL,
+        `bus_type` varchar(155) NOT NULL,
+        `price` varchar(155) NOT NULL,
+        `user_log` varchar(255) NOT NULL,
+        PRIMARY KEY(`bus_clearance_id`),
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE
+    `good_moral_certificate` (
+        `good_moral_id` int(11) NOT NULL AUTO_INCREMENT,
+        `resident_id` int(11) NOT NULL,
+        `purpose` varchar(50) NOT NULL,
+        `issued_by` varchar(50) NOT NULL,
+        `date_issued` datetime NOT NULL DEFAULT current_timestamp(),
+        PRIMARY KEY(`good_moral_id`),
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE
     `official_archive` (
         `official_archive_id` int(11) NOT NULL AUTO_INCREMENT,
         `official_id` int(11) NOT NULL,

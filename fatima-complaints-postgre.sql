@@ -32,7 +32,7 @@ CREATE TABLE
 CREATE TABLE
 	official (
 		official_id serial PRIMARY KEY,
-		resident_id int NOT NULL,
+		resident_id integer NOT NULL,
 		off_position varchar(20) NOT NULL,
 		term varchar(50) NOT NULL,
 		first_term_start date NOT NULL,
@@ -50,6 +50,46 @@ CREATE TABLE
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
 	);
 
+CREATE TABLE
+    barangay_clearance (
+        brgy_clearance_id serial PRIMARY KEY,
+        resident_id integer NOT NULL,
+        purpose varchar(50) NOT NULL,
+        receipt_number integer NOT NULL,
+        cedula_number varchar(8) NOT NULL,
+        cedula_issued_at varchar(50) NOT NULL,
+        cedula_date date NOT NULL,
+        issued_by varchar(50) NOT NULL,
+        date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        price varchar(255) NOT NULL,
+        FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
+    );
+
+CREATE TABLE
+    business_clearance (
+        bus_clearance_id serial PRIMARY KEY,
+        resident_id integer NOT NULL,
+        location varchar(255) NOT NULL,
+        bus_name varchar(155) NOT NULL,
+        receipt_number varchar(155) NOT NULL,
+        bus_type varchar(155) NOT NULL,
+        price varchar(155) NOT NULL,
+        user_log varchar(255) NOT NULL,
+        issued_by varchar(50) NOT NULL,
+        date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
+    );
+
+CREATE TABLE
+    good_moral_certificate (
+        good_moral_id serial PRIMARY KEY,
+        resident_id integer NOT NULL,
+        purpose varchar(50) NOT NULL,
+        issued_by varchar(50) NOT NULL,
+        date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
+    );
+
 CREATE TABLE 
     official_archive (
         official_archive_id serial PRIMARY KEY,
@@ -66,7 +106,7 @@ CREATE TABLE
         created_by varchar(50) NOT NULL,
         date_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         updated_by varchar(50),
-        date_updated timestamp,
+        date_updated timestamp DEFAULT CURRENT_TIMESTAMP NULL,
         remarks varchar(50),
         archived_by varchar(255),
         date_archived timestamp DEFAULT NULL,
