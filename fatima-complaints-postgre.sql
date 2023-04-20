@@ -51,21 +51,6 @@ CREATE TABLE
 	);
 
 CREATE TABLE
-    barangay_clearance (
-        brgy_clearance_id serial PRIMARY KEY,
-        resident_id integer NOT NULL,
-        purpose varchar(50) NOT NULL,
-        receipt_number integer NOT NULL,
-        cedula_number varchar(8) NOT NULL,
-        cedula_issued_at varchar(50) NOT NULL,
-        cedula_date date NOT NULL,
-        issued_by varchar(50) NOT NULL,
-        date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        price varchar(255) NOT NULL,
-        FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
-
-CREATE TABLE
     business_clearance (
         bus_clearance_id serial PRIMARY KEY,
         resident_id integer NOT NULL,

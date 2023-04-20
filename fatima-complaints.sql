@@ -70,21 +70,6 @@ CREATE TABLE
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
-    `business_clearance` (
-        `bus_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
-        `resident_id` int(11) NOT NULL,
-        `location` varchar(255) NOT NULL,
-        `bus_name` varchar(155) NOT NULL,
-        `date_issued` date NOT NULL,
-        `receipt_number` varchar(155) NOT NULL,
-        `bus_type` varchar(155) NOT NULL,
-        `price` varchar(155) NOT NULL,
-        `user_log` varchar(255) NOT NULL,
-        PRIMARY KEY(`bus_clearance_id`),
-        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
-
-CREATE TABLE
     `good_moral_certificate` (
         `good_moral_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
