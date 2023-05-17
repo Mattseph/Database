@@ -51,28 +51,32 @@ CREATE TABLE
 	);
 
 CREATE TABLE
-    business_clearance (
-        bus_clearance_id serial PRIMARY KEY,
-        resident_id integer NOT NULL,
-        location varchar(255) NOT NULL,
-        bus_name varchar(155) NOT NULL,
-        receipt_number varchar(155) NOT NULL,
-        bus_type varchar(155) NOT NULL,
-        price varchar(155) NOT NULL,
-        user_log varchar(255) NOT NULL,
+    barangay_clearance (
+        brgy_clearance_id serial PRIMARY KEY,
+        resident_id int(11) NOT NULL,
+        official_id int(11) NOT NULL,
+        purpose varchar(50) NOT NULL,
+        receipt_number int(8) NOT NULL,
+        cedula_number varchar(8) NOT NULL,
+        cedula_issued_at varchar(50) NOT NULL,
+        cedula_date date NOT NULL,
         issued_by varchar(50) NOT NULL,
-        date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
+        date_issued datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        price varchar(255) NOT NULL,
+        FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
+        FOREIGN KEY(official_id) REFERENCES official(official_id)
     );
 
 CREATE TABLE
     good_moral_certificate (
         good_moral_id serial PRIMARY KEY,
         resident_id integer NOT NULL,
+        official_id integer NOT NULL,
         purpose varchar(50) NOT NULL,
         issued_by varchar(50) NOT NULL,
         date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
+        FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
+        FOREIGN KEY(official_id) REFERENCES official(official_id)
     );
 
 CREATE TABLE 

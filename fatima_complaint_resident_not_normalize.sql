@@ -81,6 +81,7 @@ CREATE TABLE
     `barangay_clearance` (
         `brgy_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
+        `official_id` int(11) NOT NULL,
         `purpose` varchar(50) NOT NULL,
         `receipt_number` int(8) NOT NULL,
         `cedula_number` varchar(8) NOT NULL,
@@ -90,18 +91,21 @@ CREATE TABLE
         `date_issued` datetime NOT NULL DEFAULT current_timestamp(),
         `price` varchar(255) NOT NULL,
         PRIMARY KEY(`brgy_clearance_id`),
-        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
+        FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
     `good_moral_certificate` (
         `good_moral_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
+        `official_id` int(11) NOT NULL,
         `purpose` varchar(50) NOT NULL,
         `issued_by` varchar(50) NOT NULL,
         `date_issued` datetime NOT NULL DEFAULT current_timestamp(),
         PRIMARY KEY(`good_moral_id`),
-        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
+        FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
@@ -139,6 +143,18 @@ CREATE TABLE
 -- --------------------------------------------------------
 
 CREATE TABLE
+	`non_resident_complainant` (
+		`complainant_id` int(11) NOT NULL AUTO_INCREMENT,
+        `first_name` varchar(255) NOT NULL,
+        `mid_name` varchar(50) NOT NULL,
+        `last_name` varchar(50) NOT NULL,
+        `suffix` varchar(10) NOT NULL, 
+        `address` varchar(255) NOT NULL,
+        PRIMARY KEY(`complainant_id`)
+	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+-- --------------------------------------------------------
+
+CREATE TABLE
 	`respondent` (
 		`respondent_id` int(11) NOT NULL AUTO_INCREMENT,
 		`resident_id` int(11) NOT NULL,
@@ -146,16 +162,17 @@ CREATE TABLE
 	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 -- --------------------------------------------------------
 
-CREATE TABLE
+
+CREATE TABLE 
 	`mediator` (
-		`mediator_id` int(11) NOT NULL AUTO_INCREMENT,
-		`resident_id` int(11) NOT NULL,
-        `official_id` int(11) NOT NULL,
-        PRIMARY KEY(`mediator_id`),
-        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
-        FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
--- --------------------------------------------------------
+	  `mediator_id` int(11) NOT NULL,
+	  `resident_id` int(11) NOT NULL,
+	  `official_id` int(11) NOT NULL,
+	  PRIMARY KEY (`mediator_id`),
+      FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
+	  FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 CREATE TABLE
 	`complaint` (
@@ -174,9 +191,9 @@ CREATE TABLE
         `updated_by` varchar(50) DEFAULT NULL,
         `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp(),
         PRIMARY KEY(`case_no`),
-        FOREIGN KEY(`complainant_id`) REFERENCES complainant(`complainant_id`),
-        FOREIGN KEY(`respondent_id`) REFERENCES respondent(`respondent_id`),
-        FOREIGN KEY(`mediator_id`) REFERENCES mediator(`mediator_id`)
+        FOREIGN KEY(`complainant_id`) REFERENCES `complainant`(`complainant_id`),
+        FOREIGN KEY(`respondent_id`) REFERENCES `respondent`(`respondent_id`),
+        FOREIGN KEY(`mediator_id`) REFERENCES `mediator`(`mediator_id`)
 	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE

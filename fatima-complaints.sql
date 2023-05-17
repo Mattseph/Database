@@ -57,6 +57,7 @@ CREATE TABLE
     `barangay_clearance` (
         `brgy_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
+        `official_id` int(11) NOT NULL,
         `purpose` varchar(50) NOT NULL,
         `receipt_number` int(8) NOT NULL,
         `cedula_number` varchar(8) NOT NULL,
@@ -66,18 +67,21 @@ CREATE TABLE
         `date_issued` datetime NOT NULL DEFAULT current_timestamp(),
         `price` varchar(255) NOT NULL,
         PRIMARY KEY(`brgy_clearance_id`),
-        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
+        FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
     `good_moral_certificate` (
         `good_moral_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
+        `official_id` int(11) NOT NULL,
         `purpose` varchar(50) NOT NULL,
         `issued_by` varchar(50) NOT NULL,
         `date_issued` datetime NOT NULL DEFAULT current_timestamp(),
         PRIMARY KEY(`good_moral_id`),
-        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
+        FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
+        FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
