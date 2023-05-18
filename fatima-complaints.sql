@@ -1,3 +1,6 @@
+CREATE DATABASE complaintdb;
+USE complaintdb;
+
 CREATE TABLE
     `resident` (
         `resident_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -234,6 +237,29 @@ CREATE TABLE
 	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE
+	`complaint_archive` (
+		`complaint_archive_id` int(11) NOT NULL AUTO_INCREMENT,
+		`case_no` int(11) NOT NULL,
+        `complainant_id` int(11) NOT NULL,
+		`respondent_id` int(11) NOT NULL,
+        `mediator_id` int(11) NOT NULL,
+        `or_no` int(8) NOT NULL,
+        `reason` varchar(255) NOT NULL,
+        `complaint_description` varchar(255) NOT NULL,
+        `date_of_hearing` datetime NOT NULL,
+        `action_taken` varchar(255) NOT NULL,
+        `complaint_status` varchar(50) NOT NULL,
+		`created_by` varchar(50) NOT NULL,
+        `date_created` datetime NOT NULL DEFAULT current_timestamp(),
+        `updated_by` varchar(50) DEFAULT NULL,
+        `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+        PRIMARY KEY(`complaint_archive_id`),
+        FOREIGN KEY(`complainant_id`) REFERENCES `complainant`(`complainant_id`),
+        FOREIGN KEY(`respondent_id`) REFERENCES `respondent`(`respondent_id`),
+        FOREIGN KEY(`mediator_id`) REFERENCES `mediator`(`mediator_id`)
+	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+    
+CREATE TABLE
     `resident_archive` (
         `resident_archive_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
@@ -305,5 +331,45 @@ CREATE TABLE
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
     ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+/*
+	ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+*/
+CREATE USER 'brgy_administrator'@'localhost' IDENTIFIED BY 'Brgy_superAdmin';
+GRANT ALL PRIVILEGES ON *.* TO 'brgy_administrator'@'localhost' IDENTIFIED BY 'Brgy_superAdmin' WITH GRANT OPTION;
+
+/*
+	BARANGAY CAPTAIN - VIEW RESIDENT AND COMPLAINT LIST
+*/
+CREATE USER 'brgy_captain'@'localhost' IDENTIFIED BY 'Brgy_captain';
+GRANT SELECT ON complaintdb.resident TO 'brgy_captain'@'localhost';
+GRANT SELECT ON complaintdb.complaint TO 'brgy_captain'@'localhost';
+/*
+	BARANGAY SECRETARY - CRU FOR RESIDENT AND COMPLAINT. READ IN RESIDENT ARCHIVE AND COMPLAINT ARCHIVE
+*/
+CREATE USER 'brgy_secretary'@'localhost' IDENTIFIED BY 'Brgy_secretary';
+GRANT INSERT, UPDATE, SELECT ON complaintdb.resident TO 'brgy_secretary'@'localhost';
+GRANT INSERT, UPDATE, SELECT ON complaintdb.complaint TO 'brgy_secretay'@'localhost';
+GRANT SELECT ON complaintdb.resident_archive TO 'brgy_secretay'@'localhost';
+GRANT SELECT ON complaintdb.complaint_archive TO 'brgy_secretay'@'localhost';
+/*
+	BARANGAY CLERK - RESIDENT PROFILE ENCODER - ADD DATA TO RESIDENT
+*/
+CREATE USER 'clerk_resident_encoder'@'localhost' IDENTIFIED BY 'Clerk_residentEncoder';
+GRANT INSERT ON complaintdb.resident TO 'clerk_resident_encoder'@'localhost';
+/*
+	BARANGAY CLERK - RESIDENT COMPLAINT ENCODER - ADD DATA TO COMPLAINT
+*/
+CREATE USER 'clerk_complaint_encoder'@'localhost' IDENTIFIED BY 'Clerk_complaintEncoder';
+GRANT INSERT ON complaintdb.complaint TO 'clerk_complaint_encoder'@'localhost';
+/*
+	BARANGAY CLERK - ADMIN - CRU FOR RESIDENT AND COMPLAINT. ALSO ABLE TO VIEW AND RESTORE RECORD FROM RESIDENT AND COMPLAINT ARCHIVE
+*/
+
+CREATE USER 'clerk_admin'@'localhost' IDENTIFIED BY 'Brgy_clerkAdmin';
+GRANT INSERT, UPDATE, SELECT ON complaintdb.resident TO 'clerk_admin'@'localhost';
+GRANT INSERT, UPDATE, SELECT ON complaintdb.complaint TO 'clerk_admin'@'localhost';
+GRANT SELECT, UPDATE ON complaintdb.resident_archive TO 'clerk_admin'@'localhost';
+GRANT SELECT, UPDATE ON complaintdb.complaint_archive TO 'clerk_admin'@'localhost';
+
 
 
