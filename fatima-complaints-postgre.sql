@@ -1,7 +1,4 @@
-CREATE SCHEMA complaintschema;
-
-CREATE TABLE
-	resident (
+CREATE TABLE resident (
 		resident_id serial PRIMARY KEY,
 		first_name varchar(255) NOT NULL,
 		mid_name varchar(50) NOT NULL,
@@ -29,10 +26,9 @@ CREATE TABLE
 		date_updated timestamp DEFAULT CURRENT_TIMESTAMP NULL,
 		restored_by varchar(50),
 		date_restored timestamp
-	);
+);
 
-CREATE TABLE
-	official (
+CREATE TABLE official (
 		official_id serial PRIMARY KEY,
 		resident_id integer NOT NULL,
 		off_position varchar(20) NOT NULL,
@@ -50,27 +46,25 @@ CREATE TABLE
 		restored_by varchar(50),
 		date_restored timestamp,
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-	);
+);
 
-CREATE TABLE
-    barangay_clearance (
+CREATE TABLE barangay_clearance (
         brgy_clearance_id serial PRIMARY KEY,
-        resident_id int(11) NOT NULL,
-        official_id int(11) NOT NULL,
+        resident_id int NOT NULL,
+        official_id int NOT NULL,
         purpose varchar(50) NOT NULL,
-        receipt_number int(8) NOT NULL,
+        receipt_number int NOT NULL,
         cedula_number varchar(8) NOT NULL,
         cedula_issued_at varchar(50) NOT NULL,
         cedula_date date NOT NULL,
         issued_by varchar(50) NOT NULL,
-        date_issued datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         price varchar(255) NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
         FOREIGN KEY(official_id) REFERENCES official(official_id)
-    );
+);
 
-CREATE TABLE
-    good_moral_certificate (
+CREATE TABLE good_moral_certificate (
         good_moral_id serial PRIMARY KEY,
         resident_id integer NOT NULL,
         official_id integer NOT NULL,
@@ -79,10 +73,9 @@ CREATE TABLE
         date_issued timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
         FOREIGN KEY(official_id) REFERENCES official(official_id)
-    );
+);
 
-CREATE TABLE 
-    official_archive (
+CREATE TABLE official_archive (
         official_archive_id serial PRIMARY KEY,
         official_id integer NOT NULL,
         resident_id integer NOT NULL,
@@ -103,16 +96,15 @@ CREATE TABLE
         date_archived timestamp DEFAULT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
         FOREIGN KEY(official_id) REFERENCES official(official_id)
-    );
+);
 
-CREATE TABLE 
-    disability_information (
+CREATE TABLE disability_information (
         disability_id serial PRIMARY KEY,
         resident_id integer NOT NULL,
         disability_status varchar(30) NOT NULL,
         type_disability varchar(50) NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
+);
 
 CREATE TABLE 
     contact_information (
@@ -122,20 +114,18 @@ CREATE TABLE
         tel_number varchar(12) NOT NULL,
         email varchar(100) NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
+);
 
-CREATE TABLE 
-    address_information (
+CREATE TABLE address_information (
         address_id serial PRIMARY KEY,
         resident_id integer NOT NULL,
         purok varchar(20) NOT NULL,
         street varchar(50) NOT NULL,
         lot_number varchar(20) NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
+);
 
-CREATE TABLE 
-    vaccine_information (
+CREATE TABLE vaccine_information (
         vaccine_id serial PRIMARY KEY,
         resident_id integer NOT NULL,
         vaccine_status varchar(10) NOT NULL,
@@ -149,19 +139,17 @@ CREATE TABLE
         booster_2 varchar(15) NOT NULL,
         booster_date_2 date,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
+);
 
-CREATE TABLE 
-    voter_information (
+CREATE TABLE voter_information (
         voter_no varchar(20) PRIMARY KEY,
         resident_id integer NOT NULL,
         voter_status varchar(20) NOT NULL,
         precinct_number varchar(20),
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
+);
 
-CREATE TABLE 
-	emergency_contact_information (
+CREATE TABLE emergency_contact_information (
 		emergency_contact_id SERIAL PRIMARY KEY,
 		resident_id INT NOT NULL,
 		emergency_person VARCHAR(255) NOT NULL,
@@ -169,33 +157,29 @@ CREATE TABLE
 		emergency_address VARCHAR(255) NOT NULL,
 		emergency_contact VARCHAR(11) NOT NULL,
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-	);
+);
 
-CREATE TABLE 
-	complainant (
+CREATE TABLE complainant (
 		complainant_id SERIAL PRIMARY KEY,
 		resident_id INT NOT NULL,
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-	);
+);
 
-CREATE TABLE 
-	respondent (
+CREATE TABLE respondent (
 		respondent_id SERIAL PRIMARY KEY,
 		resident_id INT NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-	);
+);
 
-CREATE TABLE 
-	mediator (
+CREATE TABLE mediator (
 		mediator_id SERIAL PRIMARY KEY,
 		resident_id INT NOT NULL,
 		official_id INT NOT NULL,
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
 		FOREIGN KEY(official_id) REFERENCES official(official_id)
-	);
+);
 
-CREATE TABLE 
-	complaint (
+CREATE TABLE complaint (
 		case_no SERIAL PRIMARY KEY,
 		complainant_id INT NOT NULL,
 		respondent_id INT NOT NULL,
@@ -213,32 +197,30 @@ CREATE TABLE
 		FOREIGN KEY(complainant_id) REFERENCES complainant(complainant_id),
 		FOREIGN KEY(respondent_id) REFERENCES respondent(respondent_id),
 		FOREIGN KEY(mediator_id) REFERENCES mediator(mediator_id)
-	);
+);
 
-CREATE TABLE
-	complaint_archive (
+CREATE TABLE complaint_archive (
 		complaint_archive_id SERIAL PRIMARY KEY,
-		case_no int(11) NOT NULL,
-        complainant_id int(11) NOT NULL,
-		respondent_id int(11) NOT NULL,
-        mediator_id int(11) NOT NULL,
-        or_no int(8) NOT NULL,
+		case_no int NOT NULL,
+        complainant_id int NOT NULL,
+		respondent_id int NOT NULL,
+        mediator_id int NOT NULL,
+        or_no int NOT NULL,
         reason varchar(255) NOT NULL,
         complaint_description varchar(255) NOT NULL,
-        date_of_hearing datetime NOT NULL,
+        date_of_hearing timestamp NOT NULL,
         action_taken varchar(255) NOT NULL,
         complaint_status varchar(50) NOT NULL,
 		created_by varchar(50) NOT NULL,
-        date_created datetime NOT NULL DEFAULT current_timestamp(),
+        date_created timestamp NOT NULL DEFAULT current_timestamp,
         updated_by varchar(50) DEFAULT NULL,
-        date_updated datetime DEFAULT NULL ON UPDATE current_timestamp(),
+        date_updated timestamp DEFAULT CURRENT_TIMESTAMP NULL,
         FOREIGN KEY(complainant_id) REFERENCES complainant(complainant_id),
         FOREIGN KEY(respondent_id) REFERENCES respondent(respondent_id),
         FOREIGN KEY(mediator_id) REFERENCES mediator(mediator_id)
-	);
+);
     
-CREATE TABLE
-    resident_archive (
+CREATE TABLE resident_archive (
         resident_archive_id SERIAL PRIMARY KEY,
         resident_id INTEGER NOT NULL,
         first_name VARCHAR(255) NOT NULL,
@@ -294,10 +276,9 @@ CREATE TABLE
         archived_by VARCHAR(100),
         date_archived TIMESTAMP,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
-    );
+);
 
-CREATE TABLE
-    users (
+CREATE TABLE users (
         user_id SERIAL PRIMARY KEY,
         resident_id INTEGER NOT NULL,
         official_id INTEGER NOT NULL,
@@ -306,53 +287,79 @@ CREATE TABLE
         role VARCHAR(30) NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
         FOREIGN KEY(official_id) REFERENCES official(official_id)
-    );
+);
 
-/*
-	ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
-*/
+
+-- ROLES
+CREATE ROLE superadmin SUPERUSER CREATEDB CREATEROLE;
+
+CREATE ROLE view_db LOGIN;
+GRANT SELECT ON TABLE complaintsc.resident TO view_db;
+GRANT SELECT ON TABLE complaintsc.resident_archive TO view_db;
+GRANT SELECT ON TABLE complaintsc.complaint TO view_db;
+GRANT SELECT ON TABLE complaintsc.complaint_archive TO view_db;
+GRANT SELECT ON TABLE complaintsc.complainant TO view_db;
+GRANT SELECT ON TABLE complaintsc.respodent TO view_db;
+GRANT SELECT ON TABLE complaintsc.mediator TO view_db;
+
+CREATE ROLE cru_user LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO cru_user;
+
+CREATE ROLE cru_resident LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident TO cru_resident;
+GRANT SELECT, UPDATE ON TABLE complaintsc.resident_archive TO cru_resident;
+
+CREATE ROLE cru_complaint LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint TO cru_complaint;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO cru_complaint;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO cru_complaint;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO cru_complaint;
+GRANT SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO cru_complaint;
+
+CREATE ROLE cru_official LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO cru_official;
+
+CREATE ROLE resident_encoder LOGIN;
+GRANT INSERT, SELECT ON TABLE complaintsc.resident TO resident_encoder;
+
+CREATE ROLE complaint_encoder LOGIN;
+GRANT INSERT, SELECT ON TABLE complaintsc.complaint TO complaint_encoder;
+GRANT INSERT, SELECT ON TABLE complaintsc.complainant TO complaint_encoder;
+GRANT INSERT, SELECT ON TABLE complaintsc.respondent TO complaint_encoder;
+GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
+
+-- GRANTING ROLES TO USERS
+-- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
 CREATE USER brgy_administrator WITH PASSWORD 'Brgy_superAdmin';
-ALTER USER brgy_administrator SET SEARCH_PATH TO complaintschema;
-GRANT ALL PRIVILEGES ON DATABASE complaintdb TO brgy_adminisrator;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO brgy_administrator;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO brgy_administrator;
+ALTER USER brgy_administrator SET SEARCH_PATH TO complaintsc;
+GRANT superuser TO brgy_administrator;
 
-/*
-	BARANGAY CAPTAIN - VIEW RESIDENT AND COMPLAINT LIST
-*/
+
+-- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
-ALTER USER brgy_captain SET SEARCH_PATH TO complaintschema;
-GRANT SELECT ON TABLE complaintschema.resident TO brgy_captain;
-GRANT SELECT ON TABLE complaintschema.complaint TO brgy_captain;
-/*
-	BARANGAY SECRETARY - CRU FOR RESIDENT AND COMPLAINT. READ IN RESIDENT ARCHIVE AND COMPLAINT ARCHIVE
-*/
+ALTER USER brgy_captain SET SEARCH_PATH TO complaintsc;
+GRANT view_db TO brgy_captain; 
+
+-- BARANGAY SECRETARY
 CREATE USER brgy_secretary WITH PASSWORD 'Brgy_secretary';
-ALTER USER brgy_secretary SET SEARCH_PATH TO complaintschema;
-GRANT INSERT, UPDATE, SELECT ON TABLE complaintschema.resident TO brgy_secretary;
-GRANT INSERT, UPDATE, SELECT ON TABLE complaintschema.complaint TO brgy_secretay;
-GRANT SELECT ON TABLE complaintschema.resident_archive TO brgy_secretay;
-GRANT SELECT ON TABLE complaintschema.complaint_archive TO brgy_secretay;
-/*
-	BARANGAY CLERK - RESIDENT PROFILE ENCODER - ADD DATA TO RESIDENT
-*/
+ALTER USER brgy_secretary SET SEARCH_PATH TO complaintsc;
+GRANT view_db, cru_resident, cru_complaint, cru_official TO brgy_secretary;
+
+-- BARANGAY CLERK - RESIDENT PROFILE ENCODER
 CREATE USER clerk_resident_encoder WITH PASSWORD 'Clerk_residentEncoder';
-ALTER USER clerk_resident_encoder SET SEARCH_PATH TO complaintschema;
-GRANT INSERT ON TABLE complaintschema.resident TO clerk_resident_encoder;
+ALTER USER clerk_resident_encoder SET SEARCH_PATH TO complaintsc;
+GRANT resident_encoder TO clerk_resident_encoder;
 
-/*
-	BARANGAY CLERK - RESIDENT COMPLAINT ENCODER - ADD DATA TO COMPLAINT
-*/
+-- BARANGAY CLERK - RESIDENT PROFILE ADMIN
+CREATE USER clerk_resident_admin WITH PASSWORD 'Clerk_residentAdmin';
+GRANT cru_user, cru_resident, cru_official TO clerk_resident_admin;
+
+-- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
 CREATE USER clerk_complaint_encoder WITH PASSWORD 'Clerk_complaintEncoder';
-ALTER USER clerk_complaint_encoder SET SEARCH_PATH TO complaintschema;
-GRANT INSERT ON TABLE complaintschema.complaint TO clerk_complaint_encoder;
+ALTER USER clerk_complaint_encoder SET SEARCH_PATH TO complaintsc;
+GRANT complaint_encoder TO clerk_complaint_encoder;
 
-/*
-	BARANGAY CLERK - ADMIN - CRU FOR RESIDENT AND COMPLAINT. ALSO ABLE TO VIEW AND RESTORE RECORD FROM RESIDENT AND COMPLAINT ARCHIVE
-*/
-CREATE USER clerk_admin WITH PASSWORD 'Brgy_clerkAdmin';
-ALTER USER clerk_admin SET SEARCH_PATH TO complaintschema;
-GRANT INSERT, UPDATE, SELECT ON TABLE complaintschema.resident TO clerk_admin;
-GRANT INSERT, UPDATE, SELECT ON TABLE complaintschema.complaint TO clerk_admin;
-GRANT SELECT, UPDATE ON TABLE complaintschema.resident_archive TO clerk_admin;
-GRANT SELECT, UPDATE ON TABLE complaintschema.complaint_archive TO clerk_admin;
+-- BARANGAY CLERK - COMPLAINT COMPLAINT ADMIN
+CREATE USER clerk_complaint_admin WITH PASSWORD 'Clerk_complaintAdmin';
+ALTER USER clerk_complaint_admin SET SEARCH_PATH TO complaintsc;
+GRANT cru_user, cru_complaint, cru_official TO clerk_complaint_admin;
