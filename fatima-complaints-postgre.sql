@@ -25,7 +25,7 @@ CREATE TABLE resident (
 		updated_by varchar(50),
 		date_updated timestamp DEFAULT CURRENT_TIMESTAMP NULL,
 		restored_by varchar(50),
-		date_restored timestamp
+		date_restored timestamp DEFAULT NULL
 );
 
 CREATE TABLE official (
@@ -291,7 +291,6 @@ CREATE TABLE users (
 
 
 -- ROLES
-CREATE ROLE superadmin SUPERUSER CREATEDB CREATEROLE;
 
 CREATE ROLE view_db LOGIN;
 GRANT SELECT ON TABLE complaintsc.resident TO view_db;
@@ -328,38 +327,49 @@ GRANT INSERT, SELECT ON TABLE complaintsc.complainant TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.respondent TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
 
+CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
+
 -- GRANTING ROLES TO USERS
 -- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
-CREATE USER brgy_administrator WITH PASSWORD 'Brgy_superAdmin';
-ALTER USER brgy_administrator SET SEARCH_PATH TO complaintsc;
-GRANT superuser TO brgy_administrator;
+ CREATE USER brgy_administrator WITH PASSWORD 'Brgy_superAdmin';
+ ALTER USER brgy_administrator SET SEARCH_PATH TO complaintsc;
+ GRANT superadmin TO brgy_administrator;
+ GRANT ALL PRIVILEGES ON DATABASE complaintdb TO brgy_administrator;
+
 
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
 ALTER USER brgy_captain SET SEARCH_PATH TO complaintsc;
 GRANT view_db TO brgy_captain; 
+GRANT CONNECT ON DATABASE complaintdb TO brgy_captain;
 
 -- BARANGAY SECRETARY
 CREATE USER brgy_secretary WITH PASSWORD 'Brgy_secretary';
 ALTER USER brgy_secretary SET SEARCH_PATH TO complaintsc;
 GRANT view_db, cru_resident, cru_complaint, cru_official TO brgy_secretary;
+GRANT CONNECT ON DATABASE complaintdb TO brgy_secretary;
+
 
 -- BARANGAY CLERK - RESIDENT PROFILE ENCODER
 CREATE USER clerk_resident_encoder WITH PASSWORD 'Clerk_residentEncoder';
 ALTER USER clerk_resident_encoder SET SEARCH_PATH TO complaintsc;
 GRANT resident_encoder TO clerk_resident_encoder;
+GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_encoder;
 
 -- BARANGAY CLERK - RESIDENT PROFILE ADMIN
 CREATE USER clerk_resident_admin WITH PASSWORD 'Clerk_residentAdmin';
 GRANT cru_user, cru_resident, cru_official TO clerk_resident_admin;
+GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_admin;
 
 -- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
 CREATE USER clerk_complaint_encoder WITH PASSWORD 'Clerk_complaintEncoder';
 ALTER USER clerk_complaint_encoder SET SEARCH_PATH TO complaintsc;
 GRANT complaint_encoder TO clerk_complaint_encoder;
+GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_encoder;
 
 -- BARANGAY CLERK - COMPLAINT COMPLAINT ADMIN
 CREATE USER clerk_complaint_admin WITH PASSWORD 'Clerk_complaintAdmin';
 ALTER USER clerk_complaint_admin SET SEARCH_PATH TO complaintsc;
 GRANT cru_user, cru_complaint, cru_official TO clerk_complaint_admin;
+GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_admin;
