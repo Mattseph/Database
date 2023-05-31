@@ -389,3 +389,25 @@ BEFORE DELETE ON official
 FOR EACH ROW
 EXECUTE FUNCTION before_official_delete();
 
+-- VIEWS
+-- View to retrieve basic information of residents.
+CREATE OR REPLACE VIEW resident_info AS
+SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
+FROM resident;
+
+-- View to get details of complaints along with the names of complainants and respondents
+CREATE OR REPLACE VIEW complaint_details AS
+SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
+       r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
+       c.complaint_description, c.date_of_hearing
+FROM complaint c
+JOIN complainant cmp ON c.complainant_id = cmp.complainant_id
+JOIN respondent rsp ON c.respondent_id = rsp.respondent_id
+JOIN resident r1 ON cmp.resident_id = r1.resident_id
+JOIN resident r2 ON rsp.resident_id = r2.resident_id;
+
+-- View to retrieve information of officials and their positions
+CREATE OR REPLACE VIEW official_info AS
+SELECT o.official_id, r.first_name, r.last_name, o.off_position
+FROM official o
+JOIN resident r ON o.resident_id = r.resident_id;
