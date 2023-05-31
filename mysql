@@ -1,0 +1,12 @@
+DROP USER 'brgy_administrator'@'localhost';
+DROP USER 'brgy_captain'@'localhost';
+DROP USER 'brgy_secretary'@'localhost';
+DROP USER 'clerk_resident_encoder'@'localhost';
+DROP USER 'clerk_resident_admin'@'localhost';
+DROP USER 'clerk_complaint_encoder'@'localhost';
+DROP USER 'clerk_complaint_admin'@'localhost';
+
+
+DROP TRIGGER IF EXISTS before_resident_delete;
+DROP TRIGGER IF EXISTS before_complaint_delete;
+DROP TRIGGER IF EXISTS before_resident_delete;

@@ -1,0 +1,78 @@
+-- USER
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_administrator;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_administrator;
+DROP USER brgy_administrator;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_captain;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_captain;
+DROP USER brgy_captain;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_secretary;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_secretary;
+DROP USER brgy_secretary;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_resident_encoder;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_resident_encoder;
+DROP USER clerk_resident_encoder;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_resident_admin;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_resident_admin;
+DROP USER clerk_resident_admin;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_complaint_encoder;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_complaint_encoder;
+DROP USER clerk_complaint_encoder;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_complaint_admin;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_complaint_admin;
+DROP USER clerk_complaint_admin;
+
+
+-- ROLES
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM superadmin;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM superadmin;
+DROP ROLE superadmin;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM view_db;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM view_db;
+DROP ROLE view_db;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM complaint_encoder;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM complaint_encoder;
+DROP ROLE complaint_encoder;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM cru_complaint;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM cru_complaint;
+DROP ROLE cru_complaint;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM cru_official;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM cru_official;
+DROP ROLE cru_official;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM cru_resident;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM cru_resident;
+DROP ROLE cru_resident;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM cru_user;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM cru_user;
+DROP ROLE cru_user;
+
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM resident_encoder;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM resident_encoder;
+DROP ROLE resident_encoder;
+
+-- TRIGGER FUNCTION
+
+\df - Display Function
+\df -A = function description
+\df schemaname.*
+\dft - Display Function Trigger
+DROP TRIGGER trigger_name ON table_name;
+
+-- VIEWS
+
+\dv - Display View
+or
+SELECT * FROM pg_views;
+DROP VIEW view_name;
+
