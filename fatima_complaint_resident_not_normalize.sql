@@ -1,3 +1,6 @@
+CREATE DATABASE complaintsc;
+USE complaintsc;
+
 CREATE TABLE `resident` (
         `resident_id` int(11) NOT NULL AUTO_INCREMENT,
         `first_name` varchar(255) NOT NULL,
@@ -8,42 +11,43 @@ CREATE TABLE `resident` (
         `date_of_birth` date NOT NULL,
         `place_of_birth` varchar(255) NOT NULL,
         `civil_status` varchar(20) NOT NULL,
-        `purok` varchar(20) NOT NULL,
-        `street` varchar(50) NOT NULL,
-        `lot_number` varchar(20) NOT NULL,
         `nationality` varchar(20) NOT NULL,
         `occupation` varchar(50) NOT NULL,
         `religion` varchar(50) NOT NULL,
         `blood_type` varchar(10) NOT NULL,
         `fourps_status` varchar(5) NOT NULL,
-        `senior_status` varchar(20) NOT NULL,
-        `educational_attainment` varchar(30) NOT NULL,
         `disability_status` varchar(30) NOT NULL,
         `type_disability` varchar(50) NOT NULL,
+        `senior_status` varchar(20) NOT NULL,
+        `educational_attainment` varchar(30) NOT NULL,
         `phone_number` varchar(11) NOT NULL,
         `tel_number` varchar(12) NOT NULL,
         `email` varchar(100) NOT NULL,
-        `national_id` varchar(55) DEFAULT NULL,
+        `purok` varchar(20) NOT NULL,
+        `street` varchar(50) NOT NULL,
+        `lot_number` varchar(20) NOT NULL,
         `voter_status` varchar(20) NOT NULL,
+        `voter_id` varchar(20) DEFAULT NULL,
         `precinct_number` varchar(20) DEFAULT NULL,
-        `vaccine_status` varchar(10) NOT NULL,
-        `vaccine_1` varchar(15) NOT NULL,
+        `national_id` varchar(55) DEFAULT NULL,
+        `vaccine_status` varchar(10) DEFAULT NULL,
+        `vaccine_1` varchar(15) DEFAULT NULL,
         `vaccine_date_1` date DEFAULT NULL,
-        `vaccine_2` varchar(15) NOT NULL,
+        `vaccine_2` varchar(15) DEFAULT NULL,
         `vaccine_date_2` date DEFAULT NULL,
-        `booster_status` varchar(10) NOT NULL,
-        `booster_1` varchar(15) NOT NULL,
+        `booster_status` varchar(10) DEFAULT NULL,
+        `booster_1` varchar(15) DEFAULT NULL,
         `booster_date_1` date DEFAULT NULL,
-        `booster_2` varchar(15) NOT NULL,
+        `booster_2` varchar(15) DEFAULT NULL,
         `booster_date_2` date DEFAULT NULL,
-        `alien_status` varchar(50) NOT NULL,
-        `deceased_status` varchar(50) DEFAULT NULL,
-        `date_of_death` date DEFAULT NULL,
         `emergency_person` varchar(255) NOT NULL,
         `relationship` varchar(20) NOT NULL,
         `emergency_address` varchar(255) NOT NULL,
         `emergency_contact` varchar(11) NOT NULL,
         `img_url` varchar(255) NOT NULL,
+        `alien_status` varchar(50) NOT NULL,
+        `deceased_status` varchar(50) DEFAULT NULL,
+        `date_of_death` date DEFAULT NULL,
         `created_by` varchar(50) NOT NULL,
         `date_created` datetime NOT NULL DEFAULT current_timestamp(),
         `updated_by` varchar(50) DEFAULT NULL,
@@ -179,6 +183,8 @@ CREATE TABLE `complaint` (
         `date_created` datetime NOT NULL DEFAULT current_timestamp(),
         `updated_by` varchar(50) DEFAULT NULL,
         `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+        `restored_by` varchar(50) DEFAULT NULL,
+        `date_restored` datetime DEFAULT NULL,
         PRIMARY KEY(`case_no`),
         FOREIGN KEY(`complainant_id`) REFERENCES `complainant`(`complainant_id`),
         FOREIGN KEY(`respondent_id`) REFERENCES `respondent`(`respondent_id`),
@@ -202,6 +208,9 @@ CREATE TABLE `complaint_archive` (
         `date_created` datetime NOT NULL DEFAULT current_timestamp(),
         `updated_by` varchar(50) DEFAULT NULL,
         `date_updated` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+        `remarks` varchar(255) DEFAULT NULL,
+        `archived_by` varchar(100) DEFAULT NULL,
+        `date_archived` datetime DEFAULT NULL,
         PRIMARY KEY(`complaint_archive_id`),
         FOREIGN KEY(`complainant_id`) REFERENCES `complainant`(`complainant_id`),
         FOREIGN KEY(`respondent_id`) REFERENCES `respondent`(`respondent_id`),
@@ -335,4 +344,61 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'clerk_complain
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'clerk_complaint_admin'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'clerk_complaint_admin'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'clerk_complaint_admin'@'localhost';
+
+-- TRIGGERS
+
+DELIMITER //
+CREATE TRIGGER before_resident_delete
+BEFORE DELETE ON resident
+FOR EACH ROW
+BEGIN
+    INSERT INTO resident_archive (resident_id, first_name, mid_name, last_name, suffix, sex, date_of_birth, place_of_birth, civil_status, nationality, occupation, religion, blood_type, fourps_status, disability_status, type_disability, senior_status, educational_attainment, phone_number, tel_number, email, purok, street, lot_number, voter_status, voter_id, precinct_number, national_id, vaccine_status, vaccine_1, vaccine_date_1, vaccine_2, vaccine_date_2, booster_status, booster_1, booster_date_1, booster_2, booster_date_2, emergency_person, relationship, emergency_address, emergency_contact, img_url, alien_status, deceased_status, date_of_death, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.resident_id, OLD.first_name, OLD.mid_name, OLD.last_name, OLD.suffix, OLD.sex, OLD.date_of_birth, OLD.place_of_birth, OLD.civil_status, OLD.nationality, OLD.occupation, OLD.religion, OLD.blood_type, OLD.fourps_status, OLD.disability_status, OLD.type_disability, OLD.senior_status, OLD.educational_attainment, OLD.phone_number, OLD.tel_number, OLD.email, OLD.purok, OLD.street, OLD.lot_number, OLD.voter_status, OLD.voter_id, OLD.precinct_number, OLD.national_id, OLD.vaccine_status, OLD.vaccine_1, OLD.vaccine_date_1, OLD.vaccine_2, OLD.vaccine_date_2, OLD.booster_status, OLD.booster_1, OLD.booster_date_1, OLD.booster_2, OLD.booster_date_2, OLD.emergency_person, OLD.relationship, OLD.emergency_address, OLD.emergency_contact, OLD.img_url, OLD.alien_status, OLD.deceased_status, OLD.date_of_death, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER before_complaint_delete
+BEFORE DELETE ON complaint
+FOR EACH ROW
+BEGIN
+    INSERT INTO complaint_archive (case_no, complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.case_no, OLD.complainant_id, OLD.respondent_id, OLD.mediator_id, OLD.or_no, OLD.reason, OLD.complaint_description, OLD.date_of_hearing, OLD.action_taken, OLD.complaint_status, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER before_official_delete
+BEFORE DELETE ON official
+FOR EACH ROW
+BEGIN
+    INSERT INTO official_archive (official_id, resident_id, off_position, term, first_term_start, first_term_end, second_term_start, second_term_end, third_term_start, third_term_end, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.official_id, OLD.resident_id, OLD.off_position, OLD.term, OLD.first_term_start, OLD.first_term_end, OLD.second_term_start, OLD.second_term_end, OLD.third_term_start, OLD.third_term_end, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
+END//
+DELIMITER ;
+
+-- VIEWS
+
+-- View to retrieve basic information of residents.
+CREATE VIEW resident_info AS
+SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
+FROM resident;
+
+-- View to get details of complaints along with the names of complainants and respondents
+CREATE VIEW complaint_details AS
+SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
+       r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
+       c.complaint_description, c.date_of_hearing
+FROM complaint c
+JOIN complainant cmp ON c.complainant_id = cmp.complainant_id
+JOIN respondent rsp ON c.respondent_id = rsp.respondent_id
+JOIN resident r1 ON cmp.resident_id = r1.resident_id
+JOIN resident r2 ON rsp.resident_id = r2.resident_id;
+
+-- View to retrieve information of officials and their positions
+CREATE VIEW official_info AS
+SELECT o.official_id, r.first_name, r.last_name, o.off_position
+FROM official o
+JOIN resident r ON o.resident_id = r.resident_id;
+
 

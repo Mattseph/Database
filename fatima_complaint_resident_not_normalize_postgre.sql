@@ -1,49 +1,50 @@
 CREATE TABLE resident (
 		resident_id serial PRIMARY KEY,
-		first_name varchar(255) NOT NULL,
-		mid_name varchar(50) NOT NULL,
-		last_name varchar(50) NOT NULL,
-		suffix varchar(10) NOT NULL,
-		sex varchar(20) NOT NULL,
-		date_of_birth date NOT NULL,
-		place_of_birth varchar(255) NOT NULL,
-		civil_status varchar(20) NOT NULL,
-        purok varchar(20) NOT NULL,
-        street varchar(50) NOT NULL,
-        lot_number varchar(20) NOT NULL,
-		nationality varchar(20) NOT NULL,
-		occupation varchar(50) NOT NULL,
-		religion varchar(50) NOT NULL,
-		blood_type varchar(10) NOT NULL,
-		fourps_status varchar(5) NOT NULL,
-		senior_status varchar(20) NOT NULL,
-		educational_attainment varchar(30) NOT NULL,
-        disability_status varchar(30) NOT NULL,
-        type_disability varchar(50) NOT NULL,
-		national_id varchar(55),
-        phone_number varchar(11) NOT NULL,
-        tel_number varchar(12) NOT NULL,
-        email varchar(100) NOT NULL,
-        voter_status varchar(20) NOT NULL,
-        precinct_number varchar(20),
-        vaccine_status varchar(10) NOT NULL,
-        vaccine_1 varchar(15) NOT NULL,
-        vaccine_date_1 date,
-        vaccine_2 varchar(15) NOT NULL,
-        vaccine_date_2 date,
-        booster_status varchar(10) NOT NULL,
-        booster_1 varchar(15) NOT NULL,
-        booster_date_1 date,
-        booster_2 varchar(15) NOT NULL,
-        booster_date_2 date,
+		first_name VARCHAR(255) NOT NULL,
+        mid_name VARCHAR(50) NOT NULL,
+        last_name VARCHAR(50) NOT NULL,
+        suffix VARCHAR(10) NOT NULL,
+        sex VARCHAR(20) NOT NULL,
+        date_of_birth DATE NOT NULL,
+        place_of_birth VARCHAR(255) NOT NULL,
+        civil_status VARCHAR(20) NOT NULL,
+        nationality VARCHAR(20) NOT NULL,
+        occupation VARCHAR(50) NOT NULL,
+        religion VARCHAR(50) NOT NULL,
+        blood_type VARCHAR(10) NOT NULL,
+        fourps_status VARCHAR(5) NOT NULL,
+        disability_status VARCHAR(30) NOT NULL,
+        type_disability VARCHAR(50) NOT NULL,
+        senior_status VARCHAR(20) NOT NULL,
+        educational_attainment VARCHAR(30) NOT NULL,
+        phone_number VARCHAR(11) NOT NULL,
+        tel_number VARCHAR(12) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        purok VARCHAR(20) NOT NULL,
+        street VARCHAR(50) NOT NULL,
+        lot_number VARCHAR(20) NOT NULL,
+        voter_status VARCHAR(20) NOT NULL,
+        voter_id VARCHAR(20) DEFAULT NULL,
+        precinct_number VARCHAR(20) DEFAULT NULL,
+        national_id VARCHAR(55) DEFAULT NULL,
+        vaccine_status VARCHAR(10) DEFAULT NULL,
+        vaccine_1 VARCHAR(15) DEFAULT NULL,
+        vaccine_date_1 DATE DEFAULT NULL,
+        vaccine_2 VARCHAR(15) DEFAULT NULL,
+        vaccine_date_2 DATE DEFAULT NULL,
+        booster_status VARCHAR(10) DEFAULT NULL,
+        booster_1 VARCHAR(15) DEFAULT NULL,
+        booster_date_1 DATE DEFAULT NULL,
+        booster_2 VARCHAR(15) DEFAULT NULL,
+        booster_date_2 DATE DEFAULT NULL,
         emergency_person VARCHAR(255) NOT NULL,
-		relationship VARCHAR(20) NOT NULL,
-		emergency_address VARCHAR(255) NOT NULL,
-		emergency_contact VARCHAR(11) NOT NULL,
-		img_url varchar(255) NOT NULL,
-		alien_status varchar(50) NOT NULL,
-		deceased_status varchar(50),
-		date_of_death date,
+        relationship VARCHAR(20) NOT NULL,
+        emergency_address VARCHAR(255) NOT NULL,
+        emergency_contact VARCHAR(11) NOT NULL,
+        img_url VARCHAR(255) NOT NULL,
+        alien_status VARCHAR(50) NOT NULL,
+        deceased_status VARCHAR(50) DEFAULT NULL,
+        date_of_death DATE DEFAULT NULL,
 		created_by varchar(50) NOT NULL,
 		date_created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_by varchar(50),
@@ -51,8 +52,6 @@ CREATE TABLE resident (
 		restored_by varchar(50),
 		date_restored timestamp DEFAULT NULL
 );
-
-
 
 
 CREATE TABLE official (
@@ -158,6 +157,8 @@ CREATE TABLE complaint (
 		date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_by VARCHAR(50) DEFAULT NULL,
 		date_updated timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+        restored_by varchar(50),
+		date_restored timestamp DEFAULT NULL,
 		FOREIGN KEY(complainant_id) REFERENCES complainant(complainant_id),
 		FOREIGN KEY(respondent_id) REFERENCES respondent(respondent_id),
 		FOREIGN KEY(mediator_id) REFERENCES mediator(mediator_id)
@@ -179,6 +180,9 @@ CREATE TABLE complaint_archive (
     date_created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by VARCHAR(50) DEFAULT NULL,
     date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    remarks varchar(50),
+	archived_by varchar(255),
+	date_archived timestamp DEFAULT NULL,
     FOREIGN KEY (complainant_id) REFERENCES complainant (complainant_id),
     FOREIGN KEY (respondent_id) REFERENCES respondent (respondent_id),
     FOREIGN KEY (mediator_id) REFERENCES mediator (mediator_id)
@@ -239,7 +243,7 @@ CREATE TABLE resident_archive (
         date_updated TIMESTAMP,
         remarks VARCHAR(255),
         archived_by VARCHAR(100),
-        date_archived TIMESTAMP,
+        date_archived TIMESTAMP DEFAULT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
 );
 
@@ -335,3 +339,53 @@ CREATE USER clerk_complaint_admin WITH PASSWORD 'Clerk_complaintAdmin';
 ALTER USER clerk_complaint_admin SET SEARCH_PATH TO complaintsc;
 GRANT cru_user, cru_complaint, cru_official TO clerk_complaint_admin;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_admin;
+
+-- TRIGGERS AND FUNCTIONS
+
+-- RESIDENT
+CREATE OR REPLACE FUNCTION before_resident_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO resident_archive (resident_id, first_name, mid_name, last_name, suffix, sex, date_of_birth, place_of_birth, civil_status, nationality, occupation, religion, blood_type, fourps_status, disability_status, type_disability, senior_status, educational_attainment, phone_number, tel_number, email, purok, street, lot_number, voter_status, voter_id, precinct_number, national_id, vaccine_status, vaccine_1, vaccine_date_1, vaccine_2, vaccine_date_2, booster_status, booster_1, booster_date_1, booster_2, booster_date_2, emergency_person, relationship, emergency_address, emergency_contact, img_url, alien_status, deceased_status, date_of_death, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.resident_id, OLD.first_name, OLD.mid_name, OLD.last_name, OLD.suffix, OLD.sex, OLD.date_of_birth, OLD.place_of_birth, OLD.civil_status, OLD.nationality, OLD.occupation, OLD.religion, OLD.blood_type, OLD.fourps_status, OLD.disability_status, OLD.type_disability, OLD.senior_status, OLD.educational_attainment, OLD.phone_number, OLD.tel_number, OLD.email, OLD.purok, OLD.street, OLD.lot_number, OLD.voter_status, OLD.voter_id, OLD.precinct_number, OLD.national_id, OLD.vaccine_status, OLD.vaccine_1, OLD.vaccine_date_1, OLD.vaccine_2, OLD.vaccine_date_2, OLD.booster_status, OLD.booster_1, OLD.booster_date_1, OLD.booster_2, OLD.booster_date_2, OLD.emergency_person, OLD.relationship, OLD.emergency_address, OLD.emergency_contact, OLD.img_url, OLD.alien_status, OLD.deceased_status, OLD.date_of_death, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_resident_delete
+BEFORE DELETE ON resident
+FOR EACH ROW
+EXECUTE FUNCTION before_resident_delete();
+
+-- COMPLAINT
+CREATE OR REPLACE FUNCTION before_complaint_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO complaint_archive (case_no, complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.case_no, OLD.complainant_id, OLD.respondent_id, OLD.mediator_id, OLD.or_no, OLD.reason, OLD.complaint_description, OLD.date_of_hearing, OLD.action_taken, OLD.complaint_status, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_complaint_delete
+BEFORE DELETE ON complaint
+FOR EACH ROW
+EXECUTE FUNCTION before_complaint_delete();
+
+-- OFFICIAL
+CREATE OR REPLACE FUNCTION before_official_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO official_archive (official_id, resident_id, off_position, term, first_term_start, first_term_end, second_term_start, second_term_end, third_term_start, third_term_end, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.official_id, OLD.resident_id, OLD.off_position, OLD.term, OLD.first_term_start, OLD.first_term_end, OLD.second_term_start, OLD.second_term_end, OLD.third_term_start, OLD.third_term_end, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger
+CREATE TRIGGER before_official_delete
+BEFORE DELETE ON official
+FOR EACH ROW
+EXECUTE FUNCTION before_official_delete();
+
