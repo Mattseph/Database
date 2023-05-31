@@ -1,8 +1,4 @@
-CREATE DATABASE complaintdb;
-USE complaintdb;
-
-CREATE TABLE
-    `resident` (
+CREATE TABLE `resident` (
         `resident_id` int(11) NOT NULL AUTO_INCREMENT,
         `first_name` varchar(255) NOT NULL,
         `mid_name` varchar(50) NOT NULL,
@@ -31,11 +27,10 @@ CREATE TABLE
         `restored_by` varchar(50) DEFAULT NULL,
         `date_restored` datetime DEFAULT NULL,
         PRIMARY KEY(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 
-CREATE TABLE
-    `official` (
+CREATE TABLE `official` (
         `official_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `off_position` varchar(20) NOT NULL,
@@ -54,10 +49,9 @@ CREATE TABLE
         `date_restored` datetime DEFAULT NULL,
         PRIMARY KEY(`official_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-    `barangay_clearance` (
+CREATE TABLE `barangay_clearance` (
         `brgy_clearance_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `official_id` int(11) NOT NULL,
@@ -72,10 +66,9 @@ CREATE TABLE
         PRIMARY KEY(`brgy_clearance_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-    `good_moral_certificate` (
+CREATE TABLE `good_moral_certificate` (
         `good_moral_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `official_id` int(11) NOT NULL,
@@ -85,10 +78,9 @@ CREATE TABLE
         PRIMARY KEY(`good_moral_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-    `official_archive` (
+CREATE TABLE `official_archive` (
         `official_archive_id` int(11) NOT NULL AUTO_INCREMENT,
         `official_id` int(11) NOT NULL,
         `resident_id` int(11) NOT NULL,
@@ -110,21 +102,19 @@ CREATE TABLE
         PRIMARY KEY(`official_archive_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 
-CREATE TABLE 
-	`disability_information` (
+CREATE TABLE `disability_information` (
 		`disability_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `disability_status` varchar(30) NOT NULL,
         `type_disability` varchar(50) NOT NULL,
         PRIMARY KEY(`disability_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE 
-	`contact_information` (
+CREATE TABLE `contact_information` (
 		`contact_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `phone_number` varchar(11) NOT NULL,
@@ -132,10 +122,9 @@ CREATE TABLE
         `email` varchar(100) NOT NULL,
         PRIMARY KEY(`contact_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE 
-	`address_information` (
+CREATE TABLE `address_information` (
 		`address_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `purok` varchar(20) NOT NULL,
@@ -143,10 +132,9 @@ CREATE TABLE
         `lot_number` varchar(20) NOT NULL,
         PRIMARY KEY(`address_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
     
-CREATE TABLE 
-	`vaccine_information` (
+CREATE TABLE `vaccine_information` (
 		`vaccine_id` int(11) NOT NULL AUTO_INCREMENT,
 		`resident_id` int(11) NOT NULL,
 		`vaccine_status` varchar(10) NOT NULL,
@@ -161,20 +149,18 @@ CREATE TABLE
         `booster_date_2` date DEFAULT NULL,
         PRIMARY KEY(`vaccine_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
- CREATE TABLE 
-	`voter_information` (
+ CREATE TABLE `voter_information` (
 		`voter_no` varchar(20) NOT NULL,
 		`resident_id` int(11) NOT NULL,
 		`voter_status` varchar(20) NOT NULL,
         `precinct_number` varchar(20) DEFAULT NULL,
         PRIMARY KEY(`voter_no`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
- CREATE TABLE 
-	`emergency_contact_information` (
+ CREATE TABLE `emergency_contact_information` (
 		`emergency_contact_id` int(11) NOT NULL AUTO_INCREMENT,
 		`resident_id` int(11) NOT NULL,
 		`emergency_person` varchar(255) NOT NULL,
@@ -183,39 +169,35 @@ CREATE TABLE
         `emergency_contact` varchar(11) NOT NULL,
         PRIMARY KEY(`emergency_contact_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
--- --------------------------------------------------------
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-	`complainant` (
+
+CREATE TABLE `complainant` (
 		`complainant_id` int(11) NOT NULL AUTO_INCREMENT,
 		`resident_id` int(11) NOT NULL,
         PRIMARY KEY(`complainant_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
--- --------------------------------------------------------
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-	`respondent` (
+
+CREATE TABLE `respondent` (
 		`respondent_id` int(11) NOT NULL AUTO_INCREMENT,
 		`resident_id` int(11) NOT NULL,
         PRIMARY KEY(`respondent_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
--- --------------------------------------------------------
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-	`mediator` (
+
+CREATE TABLE `mediator` (
 		`mediator_id` int(11) NOT NULL AUTO_INCREMENT,
 		`resident_id` int(11) NOT NULL,
         `official_id` int(11) NOT NULL,
         PRIMARY KEY(`mediator_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
--- --------------------------------------------------------
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-	`complaint` (
+
+CREATE TABLE `complaint` (
 		`case_no` int(11) NOT NULL AUTO_INCREMENT,
         `complainant_id` int(11) NOT NULL,
 		`respondent_id` int(11) NOT NULL,
@@ -234,10 +216,9 @@ CREATE TABLE
         FOREIGN KEY(`complainant_id`) REFERENCES complainant(`complainant_id`),
         FOREIGN KEY(`respondent_id`) REFERENCES respondent(`respondent_id`),
         FOREIGN KEY(`mediator_id`) REFERENCES mediator(`mediator_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-	`complaint_archive` (
+CREATE TABLE `complaint_archive` (
 		`complaint_archive_id` int(11) NOT NULL AUTO_INCREMENT,
 		`case_no` int(11) NOT NULL,
         `complainant_id` int(11) NOT NULL,
@@ -257,10 +238,9 @@ CREATE TABLE
         FOREIGN KEY(`complainant_id`) REFERENCES `complainant`(`complainant_id`),
         FOREIGN KEY(`respondent_id`) REFERENCES `respondent`(`respondent_id`),
         FOREIGN KEY(`mediator_id`) REFERENCES `mediator`(`mediator_id`)
-	) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
     
-CREATE TABLE
-    `resident_archive` (
+CREATE TABLE `resident_archive` (
         `resident_archive_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `first_name` varchar(255) NOT NULL,
@@ -317,10 +297,9 @@ CREATE TABLE
         `date_archived` datetime DEFAULT NULL,
         PRIMARY KEY(`resident_archive_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE
-    `users` (
+CREATE TABLE `users` (
         `user_id` int(11) NOT NULL AUTO_INCREMENT,
         `resident_id` int(11) NOT NULL,
         `official_id` int(11) NOT NULL,
@@ -330,46 +309,66 @@ CREATE TABLE
         PRIMARY KEY(`user_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
-    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
-/*
-	ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
-*/
-CREATE USER 'brgy_administrator'@'localhost' IDENTIFIED BY 'Brgy_superAdmin';
-GRANT ALL PRIVILEGES ON *.* TO 'brgy_administrator'@'localhost' IDENTIFIED BY 'Brgy_superAdmin' WITH GRANT OPTION;
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-/*
-	BARANGAY CAPTAIN - VIEW RESIDENT AND COMPLAINT LIST
-*/
-CREATE USER 'brgy_captain'@'localhost' IDENTIFIED BY 'Brgy_captain';
-GRANT SELECT ON complaintdb.resident TO 'brgy_captain'@'localhost';
-GRANT SELECT ON complaintdb.complaint TO 'brgy_captain'@'localhost';
-/*
-	BARANGAY SECRETARY - CRU FOR RESIDENT AND COMPLAINT. READ IN RESIDENT ARCHIVE AND COMPLAINT ARCHIVE
-*/
-CREATE USER 'brgy_secretary'@'localhost' IDENTIFIED BY 'Brgy_secretary';
-GRANT INSERT, UPDATE, SELECT ON complaintdb.resident TO 'brgy_secretary'@'localhost';
-GRANT INSERT, UPDATE, SELECT ON complaintdb.complaint TO 'brgy_secretay'@'localhost';
-GRANT SELECT ON complaintdb.resident_archive TO 'brgy_secretay'@'localhost';
-GRANT SELECT ON complaintdb.complaint_archive TO 'brgy_secretay'@'localhost';
-/*
-	BARANGAY CLERK - RESIDENT PROFILE ENCODER - ADD DATA TO RESIDENT
-*/
-CREATE USER 'clerk_resident_encoder'@'localhost' IDENTIFIED BY 'Clerk_residentEncoder';
-GRANT INSERT ON complaintdb.resident TO 'clerk_resident_encoder'@'localhost';
-/*
-	BARANGAY CLERK - RESIDENT COMPLAINT ENCODER - ADD DATA TO COMPLAINT
-*/
-CREATE USER 'clerk_complaint_encoder'@'localhost' IDENTIFIED BY 'Clerk_complaintEncoder';
-GRANT INSERT ON complaintdb.complaint TO 'clerk_complaint_encoder'@'localhost';
-/*
-	BARANGAY CLERK - ADMIN - CRU FOR RESIDENT AND COMPLAINT. ALSO ABLE TO VIEW AND RESTORE RECORD FROM RESIDENT AND COMPLAINT ARCHIVE
-*/
 
-CREATE USER 'clerk_admin'@'localhost' IDENTIFIED BY 'Brgy_clerkAdmin';
-GRANT INSERT, UPDATE, SELECT ON complaintdb.resident TO 'clerk_admin'@'localhost';
-GRANT INSERT, UPDATE, SELECT ON complaintdb.complaint TO 'clerk_admin'@'localhost';
-GRANT SELECT, UPDATE ON complaintdb.resident_archive TO 'clerk_admin'@'localhost';
-GRANT SELECT, UPDATE ON complaintdb.complaint_archive TO 'clerk_admin'@'localhost';
+-- Create users with their corresponding privileges
+
+-- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+CREATE USER 'brgy_administrator'@'localhost' IDENTIFIED BY 'Brgy_superAdmin1';
+GRANT ALL PRIVILEGES ON complaintsc.* TO 'brgy_administrator'@'localhost';
+
+-- BARANGAY CAPTAIN
+CREATE USER 'brgy_captain'@'localhost' IDENTIFIED BY 'Brgy_captain2';
+GRANT USAGE ON complaintsc.* TO 'brgy_captain'@'localhost';
+GRANT SELECT ON complaintsc.resident TO 'brgy_captain'@'localhost';
+GRANT SELECT ON complaintsc.resident_archive TO 'brgy_captain'@'localhost';
+GRANT SELECT ON complaintsc.complaint TO 'brgy_captain'@'localhost';
+GRANT SELECT ON complaintsc.complaint_archive TO 'brgy_captain'@'localhost';
+
+-- BARANGAY SECRETARY
+CREATE USER 'brgy_secretary'@'localhost' IDENTIFIED BY 'Brgy_secretary3';
+GRANT USAGE ON complaintsc.* TO 'brgy_secretary'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON complaintsc.resident TO 'brgy_secretary'@'localhost';
+GRANT SELECT, UPDATE ON complaintsc.resident_archive TO 'brgy_secretary'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON complaintsc.complaint TO 'brgy_secretary'@'localhost';
+GRANT SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON complaintsc.official TO 'brgy_secretary'@'localhost';
+GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'brgy_secretary'@'localhost';
+
+-- BARANGAY CLERK - RESIDENT PROFILE ENCODER
+CREATE USER 'clerk_resident_encoder'@'localhost' IDENTIFIED BY 'Clerk_residentEncoder4';
+GRANT USAGE ON complaintsc.* TO 'clerk_resident_encoder'@'localhost';
+GRANT INSERT, SELECT ON complaintsc.resident TO 'clerk_resident_encoder'@'localhost';
+
+-- BARANGAY CLERK - RESIDENT PROFILE ADMIN
+CREATE USER 'clerk_resident_admin'@'localhost' IDENTIFIED BY 'Clerk_residentAdmin5';
+GRANT USAGE ON complaintsc.* TO 'clerk_resident_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'clerk_resident_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'clerk_resident_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'clerk_resident_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'clerk_resident_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'clerk_resident_admin'@'localhost';
+
+
+-- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
+CREATE USER 'clerk_complaint_encoder'@'localhost' IDENTIFIED BY 'Clerk_complaintEncoder6';
+GRANT USAGE ON complaintsc.* TO 'clerk_complaint_encoder'@'localhost';
+GRANT INSERT, SELECT ON complaintsc.complaint TO 'clerk_complaint_encoder'@'localhost';
+GRANT INSERT, SELECT ON complaintsc.complainant TO 'clerk_complaint_encoder'@'localhost';
+GRANT INSERT, SELECT ON complaintsc.respondent TO 'clerk_complaint_encoder'@'localhost';
+GRANT INSERT, SELECT ON complaintsc.mediator TO 'clerk_complaint_encoder'@'localhost';
+
+-- BARANGAY CLERK - COMPLAINT COMPLAINT ADMIN
+CREATE USER 'clerk_complaint_admin'@'localhost' IDENTIFIED BY 'Clerk_complaintAdmin7';
+GRANT USAGE ON complaintsc.* TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'clerk_complaint_admin'@'localhost';
+
 
 
 
