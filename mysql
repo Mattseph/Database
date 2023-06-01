@@ -1,3 +1,6 @@
+-- USERS
+SELECT user FROM mysql.user;
+
 DROP USER 'brgy_administrator'@'localhost';
 DROP USER 'brgy_captain'@'localhost';
 DROP USER 'brgy_secretary'@'localhost';
@@ -7,6 +10,27 @@ DROP USER 'clerk_complaint_encoder'@'localhost';
 DROP USER 'clerk_complaint_admin'@'localhost';
 
 
+-- TRIGGERS
+-- To view the triggers defined on a specific table in MySQL
+SHOW TRIGGERS FROM database_name LIKE 'table_name';
+
+SELECT TRIGGER_NAME, EVENT_OBJECT_TABLE, ACTION_TIMING, EVENT_MANIPULATION
+FROM INFORMATION_SCHEMA.TRIGGERS;
+
+WHERE TRIGGER_SCHEMA = 'your_database_name';
 DROP TRIGGER IF EXISTS before_resident_delete;
 DROP TRIGGER IF EXISTS before_complaint_delete;
 DROP TRIGGER IF EXISTS before_resident_delete;
+
+--VIEWS 
+
+-- View the existing views in the database:
+SHOW FULL TABLES WHERE TABLE_TYPE LIKE 'VIEW';
+
+-- View the definition of a specific view
+SHOW CREATE VIEW view_name;
+
+DROP VIEW view_name;
+
+
+
