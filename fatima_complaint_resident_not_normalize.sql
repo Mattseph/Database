@@ -287,7 +287,126 @@ CREATE TABLE `users` (
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`),
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+-- ------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- VIEWS
+
+-- View to retrieve basic information of residents.
+CREATE VIEW resident_info AS
+SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
+FROM resident;
+
+-- View to get details of complaints along with the names of complainants and respondents
+CREATE VIEW complaint_details AS
+SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
+       r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
+       c.complaint_description, c.date_of_hearing
+FROM complaint c
+JOIN complainant cmp ON c.complainant_id = cmp.complainant_id
+JOIN respondent rsp ON c.respondent_id = rsp.respondent_id
+JOIN resident r1 ON cmp.resident_id = r1.resident_id
+JOIN resident r2 ON rsp.resident_id = r2.resident_id;
+
+-- View to retrieve information of officials and their positions
+CREATE VIEW official_info AS
+SELECT o.official_id, r.first_name, r.last_name, o.off_position
+FROM official o
+JOIN resident r ON o.resident_id = r.resident_id;
+-- ---------------------------------------------------------------------------------------------------------------------------------------------
+
+-- TRIGGERS
+
+DELIMITER //
+CREATE TRIGGER before_resident_delete
+BEFORE DELETE ON resident
+FOR EACH ROW
+BEGIN
+    INSERT INTO resident_archive (resident_id, first_name, mid_name, last_name, suffix, sex, date_of_birth, place_of_birth, civil_status, nationality, occupation, religion, blood_type, fourps_status, disability_status, type_disability, senior_status, educational_attainment, phone_number, tel_number, email, purok, street, lot_number, voter_status, voter_id, precinct_number, national_id, vaccine_status, vaccine_1, vaccine_date_1, vaccine_2, vaccine_date_2, booster_status, booster_1, booster_date_1, booster_2, booster_date_2, emergency_person, relationship, emergency_address, emergency_contact, img_url, alien_status, deceased_status, date_of_death, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.resident_id, OLD.first_name, OLD.mid_name, OLD.last_name, OLD.suffix, OLD.sex, OLD.date_of_birth, OLD.place_of_birth, OLD.civil_status, OLD.nationality, OLD.occupation, OLD.religion, OLD.blood_type, OLD.fourps_status, OLD.disability_status, OLD.type_disability, OLD.senior_status, OLD.educational_attainment, OLD.phone_number, OLD.tel_number, OLD.email, OLD.purok, OLD.street, OLD.lot_number, OLD.voter_status, OLD.voter_id, OLD.precinct_number, OLD.national_id, OLD.vaccine_status, OLD.vaccine_1, OLD.vaccine_date_1, OLD.vaccine_2, OLD.vaccine_date_2, OLD.booster_status, OLD.booster_1, OLD.booster_date_1, OLD.booster_2, OLD.booster_date_2, OLD.emergency_person, OLD.relationship, OLD.emergency_address, OLD.emergency_contact, OLD.img_url, OLD.alien_status, OLD.deceased_status, OLD.date_of_death, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER before_complaint_delete
+BEFORE DELETE ON complaint
+FOR EACH ROW
+BEGIN
+    INSERT INTO complaint_archive (case_no, complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.case_no, OLD.complainant_id, OLD.respondent_id, OLD.mediator_id, OLD.or_no, OLD.reason, OLD.complaint_description, OLD.date_of_hearing, OLD.action_taken, OLD.complaint_status, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
+END//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER before_official_delete
+BEFORE DELETE ON official
+FOR EACH ROW
+BEGIN
+    INSERT INTO official_archive (official_id, resident_id, off_position, term, first_term_start, first_term_end, second_term_start, second_term_end, third_term_start, third_term_end, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.official_id, OLD.resident_id, OLD.off_position, OLD.term, OLD.first_term_start, OLD.first_term_end, OLD.second_term_start, OLD.second_term_end, OLD.third_term_start, OLD.third_term_end, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
+END//
+DELIMITER ;
+-- ---------------------------------------------------------------------------------------------------------------------------------------------
+
+-- FUNCTIONS
+
+-- Get the resident id
+DELIMITER //
+CREATE FUNCTION get_resident_by_id(residentID INT)
+RETURNS VARCHAR(255)
+READS SQL DATA
+BEGIN
+    DECLARE residentInfo VARCHAR(255);
+    SELECT CONCAT(first_name, ' ', last_name, ' ', mid_name, ' ', suffix) INTO residentInfo
+    FROM resident
+    WHERE resident_id = residentID;
+    RETURN residentInfo;
+END //
+DELIMITER ;
+
+-- Count the complaint record
+DELIMITER //
+CREATE FUNCTION get_complaint_count(complainantID INT)
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE complaintCount INT;
+    SELECT COUNT(*) INTO complaintCount
+    FROM complaint
+    WHERE complainant_id = complainantID;
+    RETURN complaintCount;
+END //
+DELIMITER ;
+
+-- Function to get the age of a resident
+DELIMITER //
+CREATE FUNCTION get_resident_age(resident_id INT) 
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE age INT;
+    SELECT TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) INTO age
+    FROM resident
+    WHERE resident_id = resident_id;
+    RETURN age;
+END//
+DELIMITER ;
+
+-- Function to get the total number of barangay clearances issued for a resident
+DELIMITER //
+CREATE FUNCTION get_resident_clearance_count(resident_id INT) 
+RETURNS INT
+READS SQL DATA
+BEGIN
+    DECLARE clearance_count INT;
+    SELECT COUNT(*) INTO clearance_count
+    FROM barangay_clearance
+    WHERE resident_id = resident_id;
+    RETURN clearance_count;
+END//
+DELIMITER ;
+-- ----------------------------------------------------------------------------------------------------------------------
+
+-- USER
 -- Create users with their corresponding privileges
 
 -- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
@@ -344,61 +463,4 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'clerk_complain
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'clerk_complaint_admin'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'clerk_complaint_admin'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'clerk_complaint_admin'@'localhost';
-
--- TRIGGERS
-
-DELIMITER //
-CREATE TRIGGER before_resident_delete
-BEFORE DELETE ON resident
-FOR EACH ROW
-BEGIN
-    INSERT INTO resident_archive (resident_id, first_name, mid_name, last_name, suffix, sex, date_of_birth, place_of_birth, civil_status, nationality, occupation, religion, blood_type, fourps_status, disability_status, type_disability, senior_status, educational_attainment, phone_number, tel_number, email, purok, street, lot_number, voter_status, voter_id, precinct_number, national_id, vaccine_status, vaccine_1, vaccine_date_1, vaccine_2, vaccine_date_2, booster_status, booster_1, booster_date_1, booster_2, booster_date_2, emergency_person, relationship, emergency_address, emergency_contact, img_url, alien_status, deceased_status, date_of_death, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
-    VALUES (OLD.resident_id, OLD.first_name, OLD.mid_name, OLD.last_name, OLD.suffix, OLD.sex, OLD.date_of_birth, OLD.place_of_birth, OLD.civil_status, OLD.nationality, OLD.occupation, OLD.religion, OLD.blood_type, OLD.fourps_status, OLD.disability_status, OLD.type_disability, OLD.senior_status, OLD.educational_attainment, OLD.phone_number, OLD.tel_number, OLD.email, OLD.purok, OLD.street, OLD.lot_number, OLD.voter_status, OLD.voter_id, OLD.precinct_number, OLD.national_id, OLD.vaccine_status, OLD.vaccine_1, OLD.vaccine_date_1, OLD.vaccine_2, OLD.vaccine_date_2, OLD.booster_status, OLD.booster_1, OLD.booster_date_1, OLD.booster_2, OLD.booster_date_2, OLD.emergency_person, OLD.relationship, OLD.emergency_address, OLD.emergency_contact, OLD.img_url, OLD.alien_status, OLD.deceased_status, OLD.date_of_death, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
-END//
-DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER before_complaint_delete
-BEFORE DELETE ON complaint
-FOR EACH ROW
-BEGIN
-    INSERT INTO complaint_archive (case_no, complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
-    VALUES (OLD.case_no, OLD.complainant_id, OLD.respondent_id, OLD.mediator_id, OLD.or_no, OLD.reason, OLD.complaint_description, OLD.date_of_hearing, OLD.action_taken, OLD.complaint_status, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
-END//
-DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER before_official_delete
-BEFORE DELETE ON official
-FOR EACH ROW
-BEGIN
-    INSERT INTO official_archive (official_id, resident_id, off_position, term, first_term_start, first_term_end, second_term_start, second_term_end, third_term_start, third_term_end, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
-    VALUES (OLD.official_id, OLD.resident_id, OLD.off_position, OLD.term, OLD.first_term_start, OLD.first_term_end, OLD.second_term_start, OLD.second_term_end, OLD.third_term_start, OLD.third_term_end, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp());
-END//
-DELIMITER ;
-
--- VIEWS
-
--- View to retrieve basic information of residents.
-CREATE VIEW resident_info AS
-SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
-FROM resident;
-
--- View to get details of complaints along with the names of complainants and respondents
-CREATE VIEW complaint_details AS
-SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
-       r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
-       c.complaint_description, c.date_of_hearing
-FROM complaint c
-JOIN complainant cmp ON c.complainant_id = cmp.complainant_id
-JOIN respondent rsp ON c.respondent_id = rsp.respondent_id
-JOIN resident r1 ON cmp.resident_id = r1.resident_id
-JOIN resident r2 ON rsp.resident_id = r2.resident_id;
-
--- View to retrieve information of officials and their positions
-CREATE VIEW official_info AS
-SELECT o.official_id, r.first_name, r.last_name, o.off_position
-FROM official o
-JOIN resident r ON o.resident_id = r.resident_id;
-
 

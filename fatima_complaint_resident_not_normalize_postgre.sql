@@ -257,7 +257,141 @@ CREATE TABLE users (
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
         FOREIGN KEY(official_id) REFERENCES official(official_id)
 );
+-- -------------------------------------------------------------------------------------------------------------------
+
+-- VIEWS
+-- View to retrieve basic information of residents.
+CREATE OR REPLACE VIEW resident_info AS
+SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
+FROM resident;
+
+-- View to get details of complaints along with the names of complainants and respondents
+CREATE OR REPLACE VIEW complaint_details AS
+SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
+       r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
+       c.complaint_description, c.date_of_hearing
+FROM complaint c
+JOIN complainant cmp ON c.complainant_id = cmp.complainant_id
+JOIN respondent rsp ON c.respondent_id = rsp.respondent_id
+JOIN resident r1 ON cmp.resident_id = r1.resident_id
+JOIN resident r2 ON rsp.resident_id = r2.resident_id;
+
+-- View to retrieve information of officials and their positions
+CREATE OR REPLACE VIEW official_info AS
+SELECT o.official_id, r.first_name, r.last_name, o.off_position
+FROM official o
+JOIN resident r ON o.resident_id = r.resident_id;
+-- -------------------------------------------------------------------------------------------------------------
     
+-- TRIGGER FUNCTIONS
+
+-- RESIDENT
+CREATE OR REPLACE FUNCTION before_resident_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO resident_archive (resident_id, first_name, mid_name, last_name, suffix, sex, date_of_birth, place_of_birth, civil_status, nationality, occupation, religion, blood_type, fourps_status, disability_status, type_disability, senior_status, educational_attainment, phone_number, tel_number, email, purok, street, lot_number, voter_status, voter_id, precinct_number, national_id, vaccine_status, vaccine_1, vaccine_date_1, vaccine_2, vaccine_date_2, booster_status, booster_1, booster_date_1, booster_2, booster_date_2, emergency_person, relationship, emergency_address, emergency_contact, img_url, alien_status, deceased_status, date_of_death, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.resident_id, OLD.first_name, OLD.mid_name, OLD.last_name, OLD.suffix, OLD.sex, OLD.date_of_birth, OLD.place_of_birth, OLD.civil_status, OLD.nationality, OLD.occupation, OLD.religion, OLD.blood_type, OLD.fourps_status, OLD.disability_status, OLD.type_disability, OLD.senior_status, OLD.educational_attainment, OLD.phone_number, OLD.tel_number, OLD.email, OLD.purok, OLD.street, OLD.lot_number, OLD.voter_status, OLD.voter_id, OLD.precinct_number, OLD.national_id, OLD.vaccine_status, OLD.vaccine_1, OLD.vaccine_date_1, OLD.vaccine_2, OLD.vaccine_date_2, OLD.booster_status, OLD.booster_1, OLD.booster_date_1, OLD.booster_2, OLD.booster_date_2, OLD.emergency_person, OLD.relationship, OLD.emergency_address, OLD.emergency_contact, OLD.img_url, OLD.alien_status, OLD.deceased_status, OLD.date_of_death, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_resident_delete
+BEFORE DELETE ON resident
+FOR EACH ROW
+EXECUTE FUNCTION before_resident_delete();
+
+-- COMPLAINT
+CREATE OR REPLACE FUNCTION before_complaint_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO complaint_archive (case_no, complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.case_no, OLD.complainant_id, OLD.respondent_id, OLD.mediator_id, OLD.or_no, OLD.reason, OLD.complaint_description, OLD.date_of_hearing, OLD.action_taken, OLD.complaint_status, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_complaint_delete
+BEFORE DELETE ON complaint
+FOR EACH ROW
+EXECUTE FUNCTION before_complaint_delete();
+
+-- OFFICIAL
+CREATE OR REPLACE FUNCTION before_official_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO official_archive (official_id, resident_id, off_position, term, first_term_start, first_term_end, second_term_start, second_term_end, third_term_start, third_term_end, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
+    VALUES (OLD.official_id, OLD.resident_id, OLD.off_position, OLD.term, OLD.first_term_start, OLD.first_term_end, OLD.second_term_start, OLD.second_term_end, OLD.third_term_start, OLD.third_term_end, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
+
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER before_official_delete
+BEFORE DELETE ON official
+FOR EACH ROW
+EXECUTE FUNCTION before_official_delete();
+-- ---------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- FUNCTION
+
+-- Get the resident id
+CREATE OR REPLACE FUNCTION get_resident_by_id(residentID INT)
+RETURNS VARCHAR(255)
+AS $$
+DECLARE
+    residentInfo VARCHAR(255);
+BEGIN
+    SELECT CONCAT(first_name, ' ', last_name, ' ', mid_name, ' ', suffix) INTO residentInfo
+    FROM resident
+    WHERE resident_id = residentID;
+    RETURN residentInfo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Count the complaint record
+CREATE OR REPLACE FUNCTION get_complaint_count(complainantID INT)
+RETURNS INT
+AS $$
+DECLARE
+    complaintCount INT;
+BEGIN
+    SELECT COUNT(*) INTO complaintCount
+    FROM complaint
+    WHERE complainant_id = complainantID;
+    RETURN complaintCount;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to get the age of a resident
+CREATE OR REPLACE FUNCTION get_resident_age(resident_id INT) 
+RETURNS INT
+AS $$
+DECLARE
+    age INT;
+BEGIN
+    SELECT EXTRACT(YEAR FROM AGE(CURRENT_DATE, date_of_birth))::INT INTO age
+    FROM resident
+    WHERE resident_id = resident_id;
+    RETURN age;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to get the total number of barangay clearances issued for a resident
+CREATE OR REPLACE FUNCTION get_resident_clearance_count(resident_id INT) 
+RETURNS INT
+AS $$
+DECLARE
+    clearance_count INT;
+BEGIN
+    SELECT COUNT(*) INTO clearance_count
+    FROM barangay_clearance
+    WHERE resident_id = resident_id;
+    RETURN clearance_count;
+END;
+$$ LANGUAGE plpgsql;
+-- ----------------------------------------------------------------------------------------------------------------------------
+
+-- ROLE
 CREATE ROLE view_db LOGIN;
 GRANT SELECT ON TABLE complaintsc.resident TO view_db;
 GRANT SELECT ON TABLE complaintsc.resident_archive TO view_db;
@@ -339,75 +473,3 @@ CREATE USER clerk_complaint_admin WITH PASSWORD 'Clerk_complaintAdmin';
 ALTER USER clerk_complaint_admin SET SEARCH_PATH TO complaintsc;
 GRANT cru_user, cru_complaint, cru_official TO clerk_complaint_admin;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_admin;
-
--- TRIGGERS AND FUNCTIONS
-
--- RESIDENT
-CREATE OR REPLACE FUNCTION before_resident_delete()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO resident_archive (resident_id, first_name, mid_name, last_name, suffix, sex, date_of_birth, place_of_birth, civil_status, nationality, occupation, religion, blood_type, fourps_status, disability_status, type_disability, senior_status, educational_attainment, phone_number, tel_number, email, purok, street, lot_number, voter_status, voter_id, precinct_number, national_id, vaccine_status, vaccine_1, vaccine_date_1, vaccine_2, vaccine_date_2, booster_status, booster_1, booster_date_1, booster_2, booster_date_2, emergency_person, relationship, emergency_address, emergency_contact, img_url, alien_status, deceased_status, date_of_death, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
-    VALUES (OLD.resident_id, OLD.first_name, OLD.mid_name, OLD.last_name, OLD.suffix, OLD.sex, OLD.date_of_birth, OLD.place_of_birth, OLD.civil_status, OLD.nationality, OLD.occupation, OLD.religion, OLD.blood_type, OLD.fourps_status, OLD.disability_status, OLD.type_disability, OLD.senior_status, OLD.educational_attainment, OLD.phone_number, OLD.tel_number, OLD.email, OLD.purok, OLD.street, OLD.lot_number, OLD.voter_status, OLD.voter_id, OLD.precinct_number, OLD.national_id, OLD.vaccine_status, OLD.vaccine_1, OLD.vaccine_date_1, OLD.vaccine_2, OLD.vaccine_date_2, OLD.booster_status, OLD.booster_1, OLD.booster_date_1, OLD.booster_2, OLD.booster_date_2, OLD.emergency_person, OLD.relationship, OLD.emergency_address, OLD.emergency_contact, OLD.img_url, OLD.alien_status, OLD.deceased_status, OLD.date_of_death, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER before_resident_delete
-BEFORE DELETE ON resident
-FOR EACH ROW
-EXECUTE FUNCTION before_resident_delete();
-
--- COMPLAINT
-CREATE OR REPLACE FUNCTION before_complaint_delete()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO complaint_archive (case_no, complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
-    VALUES (OLD.case_no, OLD.complainant_id, OLD.respondent_id, OLD.mediator_id, OLD.or_no, OLD.reason, OLD.complaint_description, OLD.date_of_hearing, OLD.action_taken, OLD.complaint_status, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER before_complaint_delete
-BEFORE DELETE ON complaint
-FOR EACH ROW
-EXECUTE FUNCTION before_complaint_delete();
-
--- OFFICIAL
-CREATE OR REPLACE FUNCTION before_official_delete()
-RETURNS TRIGGER AS $$
-BEGIN
-    INSERT INTO official_archive (official_id, resident_id, off_position, term, first_term_start, first_term_end, second_term_start, second_term_end, third_term_start, third_term_end, created_by, date_created, updated_by, date_updated, remarks, archived_by, date_archived)
-    VALUES (OLD.official_id, OLD.resident_id, OLD.off_position, OLD.term, OLD.first_term_start, OLD.first_term_end, OLD.second_term_start, OLD.second_term_end, OLD.third_term_start, OLD.third_term_end, OLD.created_by, OLD.date_created, OLD.updated_by, OLD.date_updated, NULL, NULL, current_timestamp);
-
-    RETURN OLD;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create the trigger
-CREATE TRIGGER before_official_delete
-BEFORE DELETE ON official
-FOR EACH ROW
-EXECUTE FUNCTION before_official_delete();
-
--- VIEWS
--- View to retrieve basic information of residents.
-CREATE OR REPLACE VIEW resident_info AS
-SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
-FROM resident;
-
--- View to get details of complaints along with the names of complainants and respondents
-CREATE OR REPLACE VIEW complaint_details AS
-SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
-       r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
-       c.complaint_description, c.date_of_hearing
-FROM complaint c
-JOIN complainant cmp ON c.complainant_id = cmp.complainant_id
-JOIN respondent rsp ON c.respondent_id = rsp.respondent_id
-JOIN resident r1 ON cmp.resident_id = r1.resident_id
-JOIN resident r2 ON rsp.resident_id = r2.resident_id;
-
--- View to retrieve information of officials and their positions
-CREATE OR REPLACE VIEW official_info AS
-SELECT o.official_id, r.first_name, r.last_name, o.off_position
-FROM official o
-JOIN resident r ON o.resident_id = r.resident_id;

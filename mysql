@@ -32,5 +32,17 @@ SHOW CREATE VIEW view_name;
 
 DROP VIEW view_name;
 
+-- FUNCTIONS
+SHOW FUNCTION STATUS WHERE Db = 'complaintsc';
+
+SELECT function_name(arguments) AS result FROM your_table;
+-- example
+SELECT calculate_age(date_of_birth) AS age FROM resident;
+
+DROP FUNCTION IF EXISTS function_name;
+
+
+
+
 
 

@@ -71,8 +71,13 @@ DROP TRIGGER trigger_name ON table_name;
 
 -- VIEWS
 
-\dv - Display View
+\dv - Display all table View
 or
-SELECT * FROM pg_views;
+SELECT * FROM pg_views; - To use the view
 DROP VIEW view_name;
 
+-- FUNCTIONS
+
+\df complaitsc.* - Display all of the function within a specific schema
+SELECT get_resident_by_id(1); - To use the function
+DROP FUNCTION IF EXISTS get_resident_by_id(INT);
