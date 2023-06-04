@@ -41,6 +41,16 @@ SELECT calculate_age(date_of_birth) AS age FROM resident;
 
 DROP FUNCTION IF EXISTS function_name;
 
+-- STORED PROCEDURE
+
+call storedProcedureName(Param1, Param2, ....) - To use the stored procedure
+
+SELECT ROUTINE_NAME, ROUTINE_TYPE
+FROM information_schema.ROUTINES
+WHERE ROUTINE_SCHEMA = 'complaintsc';
+
+DROP PROCEDURE [IF EXISTS] procedure_name;
+
 
 
 
