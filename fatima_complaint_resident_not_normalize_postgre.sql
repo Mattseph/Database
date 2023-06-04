@@ -510,40 +510,7 @@ $$ LANGUAGE plpgsql;
 
 -- ----------------------------------------------------------------------------------------------------------------------------
 -- ROLE
-CREATE ROLE view_db LOGIN;
-GRANT SELECT ON TABLE complaintsc.resident TO view_db;
-GRANT SELECT ON TABLE complaintsc.resident_archive TO view_db;
-GRANT SELECT ON TABLE complaintsc.complaint TO view_db;
-GRANT SELECT ON TABLE complaintsc.complaint_archive TO view_db;
-GRANT SELECT ON TABLE complaintsc.complainant TO view_db;
-GRANT SELECT ON TABLE complaintsc.respodent TO view_db;
-GRANT SELECT ON TABLE complaintsc.mediator TO view_db;
 
-CREATE ROLE cru_user LOGIN;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO cru_user;
-
-CREATE ROLE cru_resident LOGIN;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident TO cru_resident;
-GRANT SELECT, UPDATE ON TABLE complaintsc.resident_archive TO cru_resident;
-
-CREATE ROLE cru_complaint LOGIN;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint TO cru_complaint;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO cru_complaint;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO cru_complaint;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO cru_complaint;
-GRANT SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO cru_complaint;
-
-CREATE ROLE cru_official LOGIN;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO cru_official;
-
-CREATE ROLE resident_encoder LOGIN;
-GRANT INSERT, SELECT ON TABLE complaintsc.resident TO resident_encoder;
-
-CREATE ROLE complaint_encoder LOGIN;
-GRANT INSERT, SELECT ON TABLE complaintsc.complaint TO complaint_encoder;
-GRANT INSERT, SELECT ON TABLE complaintsc.complainant TO complaint_encoder;
-GRANT INSERT, SELECT ON TABLE complaintsc.respondent TO complaint_encoder;
-GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
 
 CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
 
@@ -555,17 +522,66 @@ CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
  GRANT ALL PRIVILEGES ON DATABASE complaintdb TO brgy_administrator;
 
 
+CREATE ROLE captain LOGIN;
+GRANT SELECT ON TABLE complaintsc.resident TO captain;
+GRANT SELECT ON TABLE complaintsc.resident_archive TO captain;
+GRANT SELECT ON TABLE complaintsc.complaint TO captain;
+GRANT SELECT ON TABLE complaintsc.complaint_archive TO captain;
+GRANT SELECT ON TABLE complaintsc.complainant TO captain;
+GRANT SELECT ON TABLE complaintsc.respodent TO captain;
+GRANT SELECT ON TABLE complaintsc.mediator TO captain;
+
+
+CREATE ROLE secretary LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident_archive TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO secretary;
+GRANT SELECT, UPDATE ON TABLE complaintsc.official_archive TO secretary;
+
+CREATE ROLE resident_encoder LOGIN;
+GRANT INSERT, SELECT ON TABLE complaintsc.resident TO resident_encoder;
+
+CREATE ROLE resident_admin LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO resident_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident TO resident_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident_archive TO resident_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO resident_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_admin;
+
+CREATE ROLE complaint_encoder LOGIN;
+GRANT INSERT, SELECT ON TABLE complaintsc.complaint TO complaint_encoder;
+GRANT INSERT, SELECT ON TABLE complaintsc.complainant TO complaint_encoder;
+GRANT INSERT, SELECT ON TABLE complaintsc.respondent TO complaint_encoder;
+GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
+
+CREATE ROLE complaint_admin LOGIN;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO complaint_admin;
+
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
 ALTER USER brgy_captain SET SEARCH_PATH TO complaintsc;
-GRANT view_db TO brgy_captain; 
+GRANT captain TO brgy_captain; 
 GRANT CONNECT ON DATABASE complaintdb TO brgy_captain;
 
 -- BARANGAY SECRETARY
 CREATE USER brgy_secretary WITH PASSWORD 'Brgy_secretary';
 ALTER USER brgy_secretary SET SEARCH_PATH TO complaintsc;
-GRANT view_db, cru_resident, cru_complaint, cru_official TO brgy_secretary;
+GRANT secretary TO brgy_secretary;
 GRANT CONNECT ON DATABASE complaintdb TO brgy_secretary;
 
 
@@ -577,7 +593,7 @@ GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_encoder;
 
 -- BARANGAY CLERK - RESIDENT PROFILE ADMIN
 CREATE USER clerk_resident_admin WITH PASSWORD 'Clerk_residentAdmin';
-GRANT cru_user, cru_resident, cru_official TO clerk_resident_admin;
+GRANT resident_admin TO clerk_resident_admin;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_admin;
 
 -- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
@@ -589,5 +605,5 @@ GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_encoder;
 -- BARANGAY CLERK - COMPLAINT COMPLAINT ADMIN
 CREATE USER clerk_complaint_admin WITH PASSWORD 'Clerk_complaintAdmin';
 ALTER USER clerk_complaint_admin SET SEARCH_PATH TO complaintsc;
-GRANT cru_user, cru_complaint, cru_official TO clerk_complaint_admin;
+GRANT complaint_admin TO clerk_complaint_admin;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_admin;
