@@ -437,7 +437,41 @@ END//
 DELIMITER ;
 -- ------------------------------------------------------------------------------------------------------------------------------------------
 
--- USER 
+-- Stored Procedure
+DELIMITER //
+
+CREATE PROCEDURE GetResidentsByAgeRange(
+  IN min_age INT,
+  IN max_age INT
+)
+BEGIN
+  SELECT *
+  FROM resident
+  WHERE TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) BETWEEN min_age AND max_age;
+END //
+
+DELIMITER ;
+-- CALL GetResidentsByAgeRange(18, 30);
+
+
+DELIMITER //
+CREATE PROCEDURE CalculateAverageAgeByGender()
+BEGIN
+    SELECT 
+        CASE 
+            WHEN sex = 'Male' THEN 'Male'
+            WHEN sex = 'Female' THEN 'Female'
+            ELSE 'Other'
+        END AS Gender,
+        AVG(DATEDIFF(CURDATE(), date_of_birth) / 365) AS AverageAge
+    FROM resident
+    GROUP BY Gender;
+END //
+DELIMITER ;
+
+-- --------------------------------------------------------------------------------------------------------------------------
+-- USER
+
 -- Create users with their corresponding privileges
 
 -- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
@@ -455,11 +489,16 @@ GRANT SELECT ON complaintsc.complaint_archive TO 'brgy_captain'@'localhost';
 -- BARANGAY SECRETARY
 CREATE USER 'brgy_secretary'@'localhost' IDENTIFIED BY 'Brgy_secretary3';
 GRANT USAGE ON complaintsc.* TO 'brgy_secretary'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON complaintsc.resident TO 'brgy_secretary'@'localhost';
-GRANT SELECT, UPDATE ON complaintsc.resident_archive TO 'brgy_secretary'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON complaintsc.complaint TO 'brgy_secretary'@'localhost';
-GRANT SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON complaintsc.official TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'brgy_secretary'@'localhost';
 GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'brgy_secretary'@'localhost';
 
 -- BARANGAY CLERK - RESIDENT PROFILE ENCODER
@@ -494,4 +533,5 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'clerk_complain
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'clerk_complaint_admin'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'clerk_complaint_admin'@'localhost';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'clerk_complaint_admin'@'localhost';
-
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'clerk_complaint_admin'@'localhost';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'clerk_complaint_admin'@'localhost';
