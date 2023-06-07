@@ -1,13 +1,26 @@
+-- ROLES
+SHOW GRANTS FOR 'username';
+SHOW GRANTS FOR 'username' USING 'role';
+
+DROP ROLE IF EXISTS 'superadmin';
+DROP ROLE IF EXISTS 'captain';
+DROP ROLE IF EXISTS 'secretary';
+DROP ROLE IF EXISTS 'resident_encoder';
+DROP ROLE IF EXISTS 'resident_admin';
+DROP ROLE IF EXISTS 'complaint_encoder';
+DROP ROLE IF EXISTS 'complaint_admin';
+
 -- USERS
 SELECT user FROM mysql.user;
 
-DROP USER 'brgy_administrator'@'localhost';
-DROP USER 'brgy_captain'@'localhost';
-DROP USER 'brgy_secretary'@'localhost';
-DROP USER 'clerk_resident_encoder'@'localhost';
-DROP USER 'clerk_resident_admin'@'localhost';
-DROP USER 'clerk_complaint_encoder'@'localhost';
-DROP USER 'clerk_complaint_admin'@'localhost';
+
+DROP USER IF EXISTS 'brgy_administrator';
+DROP USER IF EXISTS 'brgy_captain';
+DROP USER IF EXISTS 'brgy_secretary';
+DROP USER IF EXISTS 'clerk_resident_encoder';
+DROP USER IF EXISTS 'clerk_resident_admin';
+DROP USER IF EXISTS 'clerk_complaint_encoder';
+DROP USER IF EXISTS 'clerk_complaint_admin';
 
 
 -- TRIGGERS
