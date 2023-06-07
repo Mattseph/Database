@@ -556,6 +556,7 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_admin;
 
 CREATE ROLE complaint_encoder LOGIN;
+GRANT SELECT ON TABLE complaintsc.resident TO complaint_admin;
 GRANT INSERT, SELECT ON TABLE complaintsc.complaint TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.complainant TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.respondent TO complaint_encoder;
@@ -563,6 +564,7 @@ GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
 
 CREATE ROLE complaint_admin LOGIN;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO complaint_admin;
+GRANT SELECT ON TABLE complaintsc.resident TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO complaint_admin;
@@ -574,12 +576,15 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO complaint_
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
+GRANT CONNECT ON DATABASE complaintdb TO brgy_captain;
+GRANT USAGE ON SCHEMA complaintsc TO brgy_captain;
 ALTER USER brgy_captain SET SEARCH_PATH TO complaintsc;
 GRANT captain TO brgy_captain; 
-GRANT CONNECT ON DATABASE complaintdb TO brgy_captain;
 
 -- BARANGAY SECRETARY
 CREATE USER brgy_secretary WITH PASSWORD 'Brgy_secretary';
+GRANT CONNECT ON DATABASE complaintdb TO brgy_secretary;
+GRANT USAGE ON SCHEMA complaintsc TO brgy_secretary;
 ALTER USER brgy_secretary SET SEARCH_PATH TO complaintsc;
 GRANT secretary TO brgy_secretary;
 GRANT CONNECT ON DATABASE complaintdb TO brgy_secretary;
@@ -587,23 +592,31 @@ GRANT CONNECT ON DATABASE complaintdb TO brgy_secretary;
 
 -- BARANGAY CLERK - RESIDENT PROFILE ENCODER
 CREATE USER clerk_resident_encoder WITH PASSWORD 'Clerk_residentEncoder';
+GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_encoder;
+GRANT USAGE ON SCHEMA complaintsc TO clerk_resident_encoder;
 ALTER USER clerk_resident_encoder SET SEARCH_PATH TO complaintsc;
 GRANT resident_encoder TO clerk_resident_encoder;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_encoder;
 
 -- BARANGAY CLERK - RESIDENT PROFILE ADMIN
 CREATE USER clerk_resident_admin WITH PASSWORD 'Clerk_residentAdmin';
+GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_admin;
+GRANT USAGE ON SCHEMA complaintsc TO clerk_resident_admin;
 GRANT resident_admin TO clerk_resident_admin;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_resident_admin;
 
 -- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
 CREATE USER clerk_complaint_encoder WITH PASSWORD 'Clerk_complaintEncoder';
+GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_encoder;
+GRANT USAGE ON SCHEMA complaintsc TO clerk_complaint_encoder;
 ALTER USER clerk_complaint_encoder SET SEARCH_PATH TO complaintsc;
 GRANT complaint_encoder TO clerk_complaint_encoder;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_encoder;
 
 -- BARANGAY CLERK - COMPLAINT COMPLAINT ADMIN
 CREATE USER clerk_complaint_admin WITH PASSWORD 'Clerk_complaintAdmin';
+GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_admin;
+GRANT USAGE ON SCHEMA complaintsc TO clerk_complaint_admin;
 ALTER USER clerk_complaint_admin SET SEARCH_PATH TO complaintsc;
 GRANT complaint_admin TO clerk_complaint_admin;
 GRANT CONNECT ON DATABASE complaintdb TO clerk_complaint_admin;
