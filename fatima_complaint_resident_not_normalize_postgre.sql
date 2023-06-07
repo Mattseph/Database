@@ -518,8 +518,7 @@ CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
 -- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
  CREATE USER brgy_administrator WITH PASSWORD 'Brgy_superAdmin';
  ALTER USER brgy_administrator SET SEARCH_PATH TO complaintsc;
- GRANT superadmin TO brgy_administraexit
-tor;
+ GRANT superadmin TO brgy_administrator;
  GRANT ALL PRIVILEGES ON DATABASE complaintdb TO brgy_administrator;
 
 
