@@ -367,10 +367,27 @@ INSERT INTO `users` (`user_id`, `resident_id`, `official_id`, `username`, `passw
 
 -- VIEWS
 
+
 -- View to retrieve basic information of residents.
-CREATE VIEW resident_info AS
-SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
+CREATE VIEW resident_view AS
+SELECT *
 FROM resident;
+
+CREATE VIEW resident_complaint_count_view AS
+SELECT r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name, 
+       COUNT(DISTINCT c.complainant_id) AS Complainant_Count, 
+       COUNT(DISTINCT c.respondent_id) AS Respondent_Count
+FROM resident r
+LEFT JOIN complainant cm ON r.resident_id = cm.resident_id
+LEFT JOIN respondent rp ON r.resident_id = rp.resident_id
+LEFT JOIN complaint c ON cm.complainant_id = c.complainant_id OR rp.respondent_id = c.respondent_id
+GROUP BY r.resident_id, Full_Name;
+
+CREATE VIEW brgy_clearance_view AS
+SELECT c.brgy_clearance_id, r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name, c.purpose
+FROM resident r
+LEFT JOIN barangay_clearance c ON r.resident_id = c.resident_id;
+
 
 -- View to get details of complaints along with the names of complainants and respondents
 CREATE VIEW complaint_details AS
@@ -388,6 +405,7 @@ CREATE VIEW official_info AS
 SELECT o.official_id, r.first_name, r.last_name, o.off_position
 FROM official o
 JOIN resident r ON o.resident_id = r.resident_id;
+
 -- ---------------------------------------------------------------------------------------------------------------------------------------------
 
 -- TRIGGERS
@@ -427,56 +445,58 @@ DELIMITER ;
 
 -- Get the resident id
 DELIMITER //
-CREATE FUNCTION get_resident_by_id(residentID INT)
+CREATE FUNCTION resident_info(residentID INT)
 RETURNS VARCHAR(255)
 READS SQL DATA
 BEGIN
     DECLARE residentInfo VARCHAR(255);
-    SELECT CONCAT(first_name, ' ', last_name, ' ', mid_name, ' ', suffix) INTO residentInfo
-    FROM resident
+    SELECT resident_id, first_name, last_name, date_of_birth, occupation, email     
+    INTO residentInfo
+    FROM resident_view
     WHERE resident_id = residentID;
     RETURN residentInfo;
 END //
 DELIMITER ;
 
--- Count the complaint record
+-- Count the resident complaint record
 DELIMITER //
-CREATE FUNCTION get_complaint_count(complainantID INT)
+CREATE FUNCTION resident_complaint_count(residentID INT)
 RETURNS INT
 READS SQL DATA
 BEGIN
     DECLARE complaintCount INT;
-    SELECT COUNT(*) INTO complaintCount
-    FROM complaint
-    WHERE complainant_id = complainantID;
+    SELECT * INTO complaintCount
+    FROM resident_complaint_count_view
+    WHERE resident_id = residentID;
     RETURN complaintCount;
 END //
 DELIMITER ;
 
 -- Function to get the age of a resident
 DELIMITER //
-CREATE FUNCTION get_resident_age(resident_id INT) 
+CREATE FUNCTION resident_age(residentId INT) 
 RETURNS INT
 READS SQL DATA
 BEGIN
     DECLARE age INT;
     SELECT TIMESTAMPDIFF(YEAR, date_of_birth, CURDATE()) INTO age
-    FROM resident
-    WHERE resident_id = resident_id;
+    FROM resident_view
+    WHERE resident_id = residentId;
     RETURN age;
 END//
 DELIMITER ;
 
 -- Function to get the total number of barangay clearances issued for a resident
 DELIMITER //
-CREATE FUNCTION get_resident_clearance_count(resident_id INT) 
+CREATE FUNCTION resident_clearance_count(resident_id INT) 
 RETURNS INT
 READS SQL DATA
 BEGIN
     DECLARE clearance_count INT;
-    SELECT COUNT(*) INTO clearance_count
-    FROM barangay_clearance
-    WHERE resident_id = resident_id;
+    SELECT Full_Name, COUNT(brgy_clearance_id) AS 'Brgy_Clearance_id' INTO clearance_count
+    FROM barangay_clearance_view
+    WHERE resident_id = resident_id
+    GROUP BY Full_Name;
     RETURN clearance_count;
 END//
 DELIMITER ;
@@ -642,4 +662,4 @@ GRANT INSERT, SELECT ON complaintsc.mediator TO 'clerk_complaint_encoder';
 GRANT 'complaint_encoder' TO 'clerk_complaint_encoder';
 
 
-
+;
