@@ -1,4 +1,5 @@
 -- USER
+\du
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_administrator;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_administrator;
 DROP USER brgy_administrator;
@@ -29,6 +30,7 @@ DROP USER clerk_complaint_admin;
 
 
 -- ROLES
+\dU+ rolename - To view specific role
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM superadmin;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM superadmin;
 DROP ROLE superadmin;
