@@ -525,68 +525,121 @@ END //
 DELIMITER ;
 
 -- --------------------------------------------------------------------------------------------------------------------------
+CREATE ROLE 'superadmin'; 
+GRANT ALL PRIVILEGES ON complaintsc.* TO 'superadmin';
+
+-- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+CREATE USER 'brgy_administrator' IDENTIFIED BY 'Brgy_superAdmin1';
+GRANT USAGE ON complaintsc.* TO 'brgy_administrator';
+GRANT 'superadmin' TO 'brgy_administrator';
+
+-- ROLES
+CREATE ROLE 'captain'; 
+GRANT SELECT ON complaintsc.resident TO 'captain';
+GRANT SELECT ON complaintsc.resident_archive TO 'captain';
+GRANT SELECT ON complaintsc.complaint TO 'captain';
+GRANT SELECT ON complaintsc.complaint_archive TO 'captain';
+
+CREATE ROLE 'secretary'; 
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'secretary';
+GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'secretary';
+
+CREATE ROLE 'resident_admin'; 
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'resident_admin';
+
+CREATE ROLE 'resident_encoder'; 
+GRANT INSERT, SELECT ON complaintsc.resident TO 'resident_encoder';
+
+CREATE ROLE 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'complaint_admin';
+GRANT SELECT ON complaintsc.resident TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'complaint_admin';
+
+CREATE ROLE 'complaint_encoder';
+GRANT SELECT ON complaintsc.resident TO 'complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.complaint TO 'complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.complainant TO 'complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.respondent TO 'complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.mediator TO 'complaint_encoder';
+
 -- USER
 -- Create users with their corresponding privileges
 
--- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
-CREATE USER 'brgy_administrator'@'localhost' IDENTIFIED BY 'Brgy_superAdmin1';
-GRANT ALL PRIVILEGES ON complaintsc.* TO 'brgy_administrator'@'localhost';
-
 -- BARANGAY CAPTAIN
-CREATE USER 'brgy_captain'@'localhost' IDENTIFIED BY 'Brgy_captain2';
-GRANT USAGE ON complaintsc.* TO 'brgy_captain'@'localhost';
-GRANT SELECT ON complaintsc.resident TO 'brgy_captain'@'localhost';
-GRANT SELECT ON complaintsc.resident_archive TO 'brgy_captain'@'localhost';
-GRANT SELECT ON complaintsc.complaint TO 'brgy_captain'@'localhost';
-GRANT SELECT ON complaintsc.complaint_archive TO 'brgy_captain'@'localhost';
+CREATE USER 'brgy_captain' IDENTIFIED BY 'Brgy_captain2';
+GRANT SELECT ON complaintsc.resident TO 'brgy_captain';
+GRANT SELECT ON complaintsc.resident_archive TO 'brgy_captain';
+GRANT SELECT ON complaintsc.complaint TO 'brgy_captain';
+GRANT SELECT ON complaintsc.complaint_archive TO 'brgy_captain';
+GRANT 'captain' TO 'brgy_captain';
 
 -- BARANGAY SECRETARY
-CREATE USER 'brgy_secretary'@'localhost' IDENTIFIED BY 'Brgy_secretary3';
-GRANT USAGE ON complaintsc.* TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'brgy_secretary'@'localhost';
-GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'brgy_secretary'@'localhost';
-
--- BARANGAY CLERK - RESIDENT PROFILE ENCODER
-CREATE USER 'clerk_resident_encoder'@'localhost' IDENTIFIED BY 'Clerk_residentEncoder4';
-GRANT USAGE ON complaintsc.* TO 'clerk_resident_encoder'@'localhost';
-GRANT INSERT, SELECT ON complaintsc.resident TO 'clerk_resident_encoder'@'localhost';
+CREATE USER 'brgy_secretary' IDENTIFIED BY 'Brgy_secretary3';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'brgy_secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'brgy_secretary';
+GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'brgy_secretary';
+GRANT 'secretary' TO 'brgy_secretary';
 
 -- BARANGAY CLERK - RESIDENT PROFILE ADMIN
-CREATE USER 'clerk_resident_admin'@'localhost' IDENTIFIED BY 'Clerk_residentAdmin5';
-GRANT USAGE ON complaintsc.* TO 'clerk_resident_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'clerk_resident_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'clerk_resident_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'clerk_resident_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'clerk_resident_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'clerk_resident_admin'@'localhost';
+CREATE USER 'clerk_resident_admin' IDENTIFIED BY 'Clerk_residentAdmin4';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'clerk_resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'clerk_resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'clerk_resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'clerk_resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'clerk_resident_admin';
+GRANT 'resident_admin' TO 'clerk_resident_admin';
 
-
--- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
-CREATE USER 'clerk_complaint_encoder'@'localhost' IDENTIFIED BY 'Clerk_complaintEncoder6';
-GRANT USAGE ON complaintsc.* TO 'clerk_complaint_encoder'@'localhost';
-GRANT INSERT, SELECT ON complaintsc.complaint TO 'clerk_complaint_encoder'@'localhost';
-GRANT INSERT, SELECT ON complaintsc.complainant TO 'clerk_complaint_encoder'@'localhost';
-GRANT INSERT, SELECT ON complaintsc.respondent TO 'clerk_complaint_encoder'@'localhost';
-GRANT INSERT, SELECT ON complaintsc.mediator TO 'clerk_complaint_encoder'@'localhost';
+-- BARANGAY CLERK - RESIDENT PROFILE ENCODER
+CREATE USER 'clerk_resident_encoder' IDENTIFIED BY 'Clerk_residentEncoder5';
+GRANT INSERT, SELECT ON complaintsc.resident TO 'clerk_resident_encoder';
+GRANT 'resident_encoder' TO 'clerk_resident_encoder';
 
 -- BARANGAY CLERK - COMPLAINT COMPLAINT ADMIN
-CREATE USER 'clerk_complaint_admin'@'localhost' IDENTIFIED BY 'Clerk_complaintAdmin7';
-GRANT USAGE ON complaintsc.* TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'clerk_complaint_admin'@'localhost';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'clerk_complaint_admin'@'localhost';
+CREATE USER 'clerk_complaint_admin' IDENTIFIED BY 'Clerk_complaintAdmin6';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'clerk_complaint_admin';
+GRANT SELECT ON complaintsc.resident TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'clerk_complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'clerk_complaint_admin';
+GRANT 'complaint_admin' TO 'clerk_complaint_admin';
+
+-- BARANGAY CLERK - RESIDENT COMPLAINT ENCODER
+CREATE USER 'clerk_complaint_encoder' IDENTIFIED BY 'Clerk_complaintEncoder7';
+GRANT SELECT ON complaintsc.resident TO 'clerk_complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.complaint TO 'clerk_complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.complainant TO 'clerk_complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.respondent TO 'clerk_complaint_encoder';
+GRANT INSERT, SELECT ON complaintsc.mediator TO 'clerk_complaint_encoder';
+GRANT 'complaint_encoder' TO 'clerk_complaint_encoder';
+
+
 
