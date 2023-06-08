@@ -1,5 +1,7 @@
 -- ROLES
 \dU+ rolename - To view specific role
+SET ROLE rolename;
+
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM superadmin;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM superadmin;
 DROP ROLE superadmin;
@@ -31,6 +33,7 @@ DROP ROLE resident_admin;
 
 -- USER
 \du
+select current_user;
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_administrator;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_administrator;
 DROP USER brgy_administrator;
