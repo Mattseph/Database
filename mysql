@@ -12,7 +12,8 @@ DROP ROLE IF EXISTS 'complaint_admin';
 
 -- USERS
 SELECT user FROM mysql.user;
-select current_user;
+SELECT current_user;
+SELECT current_role();
 
 DROP USER IF EXISTS 'brgy_administrator';
 DROP USER IF EXISTS 'brgy_captain';
