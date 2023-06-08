@@ -570,6 +570,7 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'secretary';
 GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'secretary';
+GRANT SHOW VIEW ON complaintsc.* TO 'secretary';
 
 CREATE ROLE 'resident_admin'; 
 GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'resident_admin';
@@ -577,6 +578,7 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'resident_admin';
+GRANT SHOW VIEW ON complaintsc.* TO 'resident_admin';
 
 CREATE ROLE 'resident_encoder'; 
 GRANT INSERT, SELECT ON complaintsc.resident TO 'resident_encoder';
@@ -591,6 +593,7 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'complaint_admin';
+GRANT SHOW VIEW ON complaintsc.* TO 'complaint_admin';
 
 CREATE ROLE 'complaint_encoder';
 GRANT SELECT ON complaintsc.resident TO 'complaint_encoder';
