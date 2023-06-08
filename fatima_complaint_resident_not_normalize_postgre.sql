@@ -434,28 +434,39 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION Get4psResident()
+RETURNS TABLE (
+  resident_id INT,
+  full_name VARCHAR(255),
+  address VARCHAR(255),
+  fourps_status VARCHAR(255)
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT rv.resident_id, CONCAT_WS(' ', rv.first_name, rv.mid_name, rv.last_name, rv.suffix)::VARCHAR AS full_name, CONCAT_WS(' ', rv.purok, rv.street, rv.lot_number)::VARCHAR AS address, rv.fourps_status
+  FROM resident_view rv
+  WHERE rv.fourps_status = '4Ps';
+END;
+$$ LANGUAGE plpgsql;
 
--- CREATE OR REPLACE FUNCTION CalculateAverageAgeByGender()
--- RETURNS TABLE (
---   gender VARCHAR,
---   average_age NUMERIC
--- )
--- AS $$
--- BEGIN
---   RETURN QUERY
---   SELECT 
---     CASE 
---       WHEN rv.sex = 'Male' THEN 'Male'
---       WHEN rv.sex = 'Female' THEN 'Female'
---       ELSE 'Other'
---     END::VARCHAR AS gender,
---     AVG(EXTRACT(DAY FROM age(CURRENT_DATE, rv.date_of_birth)) / 365)::NUMERIC AS average_age
---   FROM resident_view rv
---   GROUP BY gender;
--- END;
--- $$ LANGUAGE plpgsql;
-
-
+CREATE OR REPLACE FUNCTION GetVoterResident()
+RETURNS TABLE (
+  resident_id INT,
+  full_name VARCHAR(255),
+  address VARCHAR(255),
+  voter_status VARCHAR(255),
+  voter_id VARCHAR(255),
+  precinct_number VARCHAR(255)
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT rv.resident_id, CONCAT_WS(' ', rv.first_name, rv.mid_name, rv.last_name, rv.suffix)::VARCHAR AS full_name, CONCAT_WS(' ', rv.purok, rv.street, rv.lot_number)::VARCHAR AS address, rv.voter_status, rv.voter_id, rv.precinct_number
+  FROM resident_view rv
+  WHERE rv.voter_status = 'Registered Voter' AND rv.voter_id IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql;
 -- ----------------------------------------------------------------------------------------------------------------------------
 
 -- TRIGGER FUNCTIONS
