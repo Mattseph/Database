@@ -316,9 +316,24 @@ INSERT INTO users (user_id, resident_id, official_id, username, password, role) 
 
 -- VIEWS
 -- View to retrieve basic information of residents.
-CREATE OR REPLACE VIEW resident_info AS
-SELECT resident_id, first_name, last_name, date_of_birth, occupation, email
+CREATE OR REPLACE VIEW resident_view AS
+SELECT *
 FROM resident;
+
+CREATE OR REPLACE VIEW resident_complaint_count_view AS
+SELECT r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name,
+       COUNT(DISTINCT c.complainant_id) AS Complainant_Count,
+       COUNT(DISTINCT c.respondent_id) AS Respondent_Count
+FROM resident r
+LEFT JOIN complainant cm ON r.resident_id = cm.resident_id
+LEFT JOIN respondent rp ON r.resident_id = rp.resident_id
+LEFT JOIN complaint c ON cm.complainant_id = c.complainant_id OR rp.respondent_id = c.respondent_id
+GROUP BY r.resident_id, Full_Name;
+
+CREATE OR REPLACE VIEW brgy_clearance_view AS
+SELECT c.brgy_clearance_id, r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name, c.purpose
+FROM resident r
+LEFT JOIN barangay_clearance c ON r.resident_id = c.resident_id;
 
 -- View to get details of complaints along with the names of complainants and respondents
 CREATE OR REPLACE VIEW complaint_details AS
@@ -337,7 +352,112 @@ SELECT o.official_id, r.first_name, r.last_name, o.off_position
 FROM official o
 JOIN resident r ON o.resident_id = r.resident_id;
 -- -------------------------------------------------------------------------------------------------------------
+
+-- FUNCTION
+CREATE OR REPLACE FUNCTION GetResidentsByAgeRange(
+  min_age INT,
+  max_age INT
+)
+RETURNS TABLE (
+  resident_id INT,
+  full_name VARCHAR(255),
+  age INT
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT rv.resident_id, CONCAT_WS(' ', rv.first_name, rv.mid_name, rv.last_name, rv.suffix)::VARCHAR AS full_name, EXTRACT(YEAR FROM age(CURRENT_DATE, rv.date_of_birth))::INT AS age
+  FROM resident_view AS rv
+  WHERE EXTRACT(YEAR FROM age(CURRENT_DATE, rv.date_of_birth)) BETWEEN min_age AND max_age
+  ORDER BY age ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Count the resident complaint record
+CREATE OR REPLACE FUNCTION resident_complaint_record(residentID INT)
+RETURNS TABLE (
+	resident_id INT,
+    full_name VARCHAR(255),
+    complainant_count INT,
+    respondent_count INT	
+)
+AS $$
+BEGIN
+	RETURN QUERY
+    SELECT cv.resident_id, cv.Full_name::VARCHAR AS full_name, cv.Complainant_Count::INT AS complainant_count, cv.Respondent_Count::INT AS respondent_count
+    FROM resident_complaint_count_view cv
+    WHERE cv.resident_id = residentID;
     
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to get the total number of barangay clearances issued for a resident
+CREATE OR REPLACE FUNCTION resident_clearance_count(residentId INT)
+RETURNS TABLE (
+	resident_id INT,
+    full_name VARCHAR(255),
+    brgy_clearance_count INT
+)
+AS $$
+BEGIN
+	RETURN QUERY
+    SELECT bcv.resident_id, bcv.Full_Name::VARCHAR AS full_name, COUNT(brgy_clearance_id)::INT AS brgy_clearance_count
+    FROM brgy_clearance_view bcv
+    WHERE bcv.resident_id = residentId
+    GROUP BY bcv.resident_id, bcv.full_Name;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION GetResidentsWithMultipleVaccinations()
+RETURNS TABLE (
+  resident_id INT,
+  full_name VARCHAR(255),
+  vaccine_status VARCHAR(255),
+  vaccine_1 VARCHAR(255),
+  vaccine_date_1 DATE,
+  vaccine_2 VARCHAR(255),
+  vaccine_date_2 DATE,
+  booster_status VARCHAR(255),
+  booster_1 VARCHAR(255),
+  booster_date_1 DATE,
+  booster_2 VARCHAR(255),
+  booster_date_2 DATE
+)
+AS $$
+BEGIN
+  RETURN QUERY
+  SELECT rv.resident_id, CONCAT_WS(' ', rv.first_name, rv.mid_name, rv.last_name, rv.suffix)::VARCHAR AS full_name, rv.vaccine_status, rv.vaccine_1, rv.vaccine_date_1, rv.vaccine_2, rv.vaccine_date_2, rv.booster_status, rv.booster_1, rv.booster_date_1, rv.booster_2, rv.booster_date_2
+  FROM resident_view rv
+  WHERE (rv.vaccine_status = 'Vaccinated' AND rv.vaccine_1 IS NOT NULL AND rv.vaccine_2 IS NOT NULL)
+    OR (rv.booster_status = 'Boostered' AND rv.booster_2 IS NOT NULL AND rv.booster_2 IS NOT NULL);
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- CREATE OR REPLACE FUNCTION CalculateAverageAgeByGender()
+-- RETURNS TABLE (
+--   gender VARCHAR,
+--   average_age NUMERIC
+-- )
+-- AS $$
+-- BEGIN
+--   RETURN QUERY
+--   SELECT 
+--     CASE 
+--       WHEN rv.sex = 'Male' THEN 'Male'
+--       WHEN rv.sex = 'Female' THEN 'Female'
+--       ELSE 'Other'
+--     END::VARCHAR AS gender,
+--     AVG(EXTRACT(DAY FROM age(CURRENT_DATE, rv.date_of_birth)) / 365)::NUMERIC AS average_age
+--   FROM resident_view rv
+--   GROUP BY gender;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+
+-- ----------------------------------------------------------------------------------------------------------------------------
+
 -- TRIGGER FUNCTIONS
 
 -- RESIDENT
@@ -387,130 +507,7 @@ FOR EACH ROW
 EXECUTE FUNCTION before_official_delete();
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------
 
--- FUNCTION
-
--- Get the resident id
-CREATE OR REPLACE FUNCTION get_resident_by_id(residentID INT)
-RETURNS VARCHAR(255)
-AS $$
-DECLARE
-    residentInfo VARCHAR(255);
-BEGIN
-    SELECT CONCAT(first_name, ' ', last_name, ' ', mid_name, ' ', suffix) INTO residentInfo
-    FROM resident
-    WHERE resident_id = residentID;
-    RETURN residentInfo;
-END;
-$$ LANGUAGE plpgsql;
-
--- Count the complaint record
-CREATE OR REPLACE FUNCTION get_complaint_count(complainantID INT)
-RETURNS INT
-AS $$
-DECLARE
-    complaintCount INT;
-BEGIN
-    SELECT COUNT(*) INTO complaintCount
-    FROM complaint
-    WHERE complainant_id = complainantID;
-    RETURN complaintCount;
-END;
-$$ LANGUAGE plpgsql;
-
--- Function to get the age of a resident
-CREATE OR REPLACE FUNCTION get_resident_age(resident_id INT) 
-RETURNS INT
-AS $$
-DECLARE
-    age INT;
-BEGIN
-    SELECT EXTRACT(YEAR FROM AGE(CURRENT_DATE, date_of_birth))::INT INTO age
-    FROM resident
-    WHERE resident_id = resident_id;
-    RETURN age;
-END;
-$$ LANGUAGE plpgsql;
-
--- Function to get the total number of barangay clearances issued for a resident
-CREATE OR REPLACE FUNCTION get_resident_clearance_count(resident_id INT) 
-RETURNS INT
-AS $$
-DECLARE
-    clearance_count INT;
-BEGIN
-    SELECT COUNT(*) INTO clearance_count
-    FROM barangay_clearance
-    WHERE resident_id = resident_id;
-    RETURN clearance_count;
-END;
-$$ LANGUAGE plpgsql;
--- ----------------------------------------------------------------------------------------------------------------------------
-
--- Stored Procedure 
-CREATE OR REPLACE FUNCTION GetResidentsByAgeRange(
-  min_age INT,
-  max_age INT
-)
-RETURNS TABLE (
-  resident_id INT,
-  name VARCHAR,
-  date_of_birth DATE
-)
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT *
-  FROM resident
-  WHERE EXTRACT(YEAR FROM age(CURRENT_DATE, date_of_birth)) BETWEEN min_age AND max_age;
-END;
-$$ LANGUAGE plpgsql;
-
--- SELECT * FROM GetResidentsByAgeRange(18, 30);
-
-
-CREATE OR REPLACE FUNCTION CalculateAverageAgeByGender()
-RETURNS TABLE (
-  gender VARCHAR,
-  average_age NUMERIC
-)
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT 
-    CASE 
-      WHEN sex = 'Male' THEN 'Male'
-      WHEN sex = 'Female' THEN 'Female'
-      ELSE 'Other'
-    END AS gender,
-    AVG(EXTRACT(DAY FROM age(CURRENT_DATE, date_of_birth)) / 365) AS average_age
-  FROM resident
-  GROUP BY gender;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION GetResidentsWithMultipleVaccinations()
-RETURNS TABLE (
-  resident_id INT,
-  name VARCHAR,
-  vaccine_status VARCHAR,
-  vaccine_2 VARCHAR,
-  booster_status VARCHAR,
-  booster_2 VARCHAR
-)
-AS $$
-BEGIN
-  RETURN QUERY
-  SELECT *
-  FROM resident
-  WHERE (vaccine_status = 'Vaccinated' AND vaccine_2 IS NOT NULL)
-    OR (booster_status = 'Boostered' AND booster_2 IS NOT NULL);
-END;
-$$ LANGUAGE plpgsql;
-
--- ----------------------------------------------------------------------------------------------------------------------------
 -- ROLE
-
 
 CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
 
@@ -544,6 +541,8 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO secretary;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO secretary;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO secretary;
 GRANT SELECT, UPDATE ON TABLE complaintsc.official_archive TO secretary;
+GRANT SHOW VIEW ON complaintsc.* TO secretary;
+
 
 CREATE ROLE resident_encoder LOGIN;
 GRANT INSERT, SELECT ON TABLE complaintsc.resident TO resident_encoder;
@@ -554,6 +553,8 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident_archive TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_admin;
+GRANT SHOW VIEW ON complaintsc.* TO resident_admin;
+
 
 CREATE ROLE complaint_encoder LOGIN;
 GRANT SELECT ON TABLE complaintsc.resident TO complaint_encoder;
@@ -572,7 +573,7 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO complaint_admin;
-
+GRANT SHOW VIEW ON complaintsc.* TO complaint_admin;
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
