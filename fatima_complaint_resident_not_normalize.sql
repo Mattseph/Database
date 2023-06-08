@@ -389,7 +389,7 @@ LEFT JOIN barangay_clearance c ON r.resident_id = c.resident_id;
 
 
 -- View the details of complaints along with the names of complainants and respondents
-CREATE VIEW complaint_details AS
+CREATE VIEW complaint_details_view AS
 SELECT c.case_no, r1.first_name AS complainant_first_name, r1.last_name AS complainant_last_name,
        r2.first_name AS respondent_first_name, r2.last_name AS respondent_last_name,
        c.complaint_description, c.date_of_hearing
@@ -400,7 +400,7 @@ JOIN resident r1 ON cmp.resident_id = r1.resident_id
 JOIN resident r2 ON rsp.resident_id = r2.resident_id;
 
 -- View to retrieve information of officials and their positions
-CREATE VIEW official_info AS
+CREATE VIEW official_info_view AS
 SELECT o.official_id, r.first_name, r.last_name, o.off_position
 FROM official o
 JOIN resident r ON o.resident_id = r.resident_id;
