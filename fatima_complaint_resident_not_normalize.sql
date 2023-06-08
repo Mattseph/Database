@@ -411,12 +411,12 @@ JOIN resident r ON o.resident_id = r.resident_id;
 
 -- Get the resident id
 DELIMITER //
-CREATE FUNCTION resident_info(residentID INT)
+CREATE FUNCTION resident_name(residentID INT)
 RETURNS VARCHAR(255)
 READS SQL DATA
 BEGIN
     DECLARE residentInfo VARCHAR(255);
-    SELECT resident_id, first_name, last_name, date_of_birth, occupation, email     
+    SELECT CONCAT(first_name, ' ', mid_name, ' ', last_name, ' ', suffix) AS Full_Name    
     INTO residentInfo
     FROM resident_view
     WHERE resident_id = residentID;
