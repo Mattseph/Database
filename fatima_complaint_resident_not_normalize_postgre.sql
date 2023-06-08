@@ -560,9 +560,9 @@ GRANT INSERT, SELECT ON TABLE complaintsc.resident TO resident_encoder;
 
 CREATE ROLE resident_admin LOGIN;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO resident_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident TO resident_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.resident TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident_archive TO resident_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO resident_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.official TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_admin;
 GRANT SHOW VIEW ON complaintsc.* TO resident_admin;
 
@@ -577,12 +577,12 @@ GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
 CREATE ROLE complaint_admin LOGIN;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO complaint_admin;
 GRANT SELECT ON TABLE complaintsc.resident TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complaint TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complainant TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.respondent TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.mediator TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.official TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO complaint_admin;
 GRANT SHOW VIEW ON complaintsc.* TO complaint_admin;
 

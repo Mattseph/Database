@@ -574,9 +574,9 @@ GRANT SHOW VIEW ON complaintsc.* TO 'secretary';
 
 CREATE ROLE 'resident_admin'; 
 GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'resident_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.resident TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.resident TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'resident_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.official TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'resident_admin';
 GRANT SHOW VIEW ON complaintsc.* TO 'resident_admin';
 
@@ -586,12 +586,12 @@ GRANT INSERT, SELECT ON complaintsc.resident TO 'resident_encoder';
 CREATE ROLE 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'complaint_admin';
 GRANT SELECT ON complaintsc.resident TO 'complaint_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.complaint TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'complaint_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.complainant TO 'complaint_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'complaint_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'complaint_admin';
-GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.complainant TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.respondent TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.mediator TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.official TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'complaint_admin';
 GRANT SHOW VIEW ON complaintsc.* TO 'complaint_admin';
 
