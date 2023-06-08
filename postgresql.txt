@@ -6,6 +6,12 @@ REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM superadmin;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM superadmin;
 DROP ROLE superadmin;
 
+REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_administrator;
+REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_administrator;
+DROP USER brgy_administrator;
+
+-- -----------------------------------------------------------------------------
+
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM captain;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM captain;
 DROP ROLE captain;
@@ -34,9 +40,6 @@ DROP ROLE resident_admin;
 -- USER
 \du
 select current_user;
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_administrator;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_administrator;
-DROP USER brgy_administrator;
 
 REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_captain;
 REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_captain;
