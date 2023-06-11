@@ -199,7 +199,7 @@ CREATE TABLE `official_archive` (
         `off_position` varchar(20) NOT NULL,
         `term` varchar(50) NOT NULL,
         `first_term_start` date NOT NULL,
-        `first_term_end` date NOT NULL,
+        `first_term_end` date DEFAULT NULL,
         `second_term_start` date DEFAULT NULL,
         `second_term_end` date DEFAULT NULL,
         `third_term_start` date DEFAULT NULL,
