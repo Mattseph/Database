@@ -2,67 +2,29 @@
 \dU+ rolename - To view specific role
 SET ROLE rolename;
 
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM superadmin;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM superadmin;
 DROP ROLE superadmin;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_administrator;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_administrator;
 DROP USER brgy_administrator;
 
 -- -----------------------------------------------------------------------------
+ -- Drop the schema first before dropping the role
 
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM captain;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM captain;
 DROP ROLE captain;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM secretary;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM secretary;
 DROP ROLE secretary;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM complaint_encoder;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM complaint_encoder;
 DROP ROLE complaint_encoder;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM complaint_admin;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM complaint_admin;
 DROP ROLE complaint_admin;
-
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM resident_encoder;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM resident_encoder;
 DROP ROLE resident_encoder;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM resident_admin;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM resident_admin;
 DROP ROLE resident_admin;
 
 -- USER
 \du
 select current_user;
 
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_captain;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_captain;
+-- Drop the database first before dropping user.
 DROP USER brgy_captain;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM brgy_secretary;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM brgy_secretary;
 DROP USER brgy_secretary;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_resident_encoder;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_resident_encoder;
 DROP USER clerk_resident_encoder;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_resident_admin;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_resident_admin;
 DROP USER clerk_resident_admin;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_complaint_encoder;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_complaint_encoder;
 DROP USER clerk_complaint_encoder;
-
-REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA complaintsc FROM clerk_complaint_admin;
-REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA complaintsc FROM clerk_complaint_admin;
 DROP USER clerk_complaint_admin;
 
 
