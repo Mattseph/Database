@@ -620,9 +620,19 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.respondent TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'secretary';
-GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'secretary';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'secretary';
 GRANT SHOW VIEW, SELECT ON complaintsc.* TO 'secretary';
 GRANT EXECUTE ON *.* TO 'secretary';
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE users_user_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE resident_resident_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE resident_archive_resident_archive_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_case_no_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE complainant_complainant_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE respondent_respondent_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE mediator_mediator_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_archive_complaint_archive_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_official_id_seq TO secretary;
+-- GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_archive_official_archive_id_seq TO secretary;
 
 
 CREATE ROLE 'resident_admin'; 
