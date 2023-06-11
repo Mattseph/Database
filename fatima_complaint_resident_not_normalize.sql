@@ -82,7 +82,7 @@ INSERT INTO `resident` (`resident_id`, `first_name`, `mid_name`, `last_name`, `s
 (13, 'Renante', 'D', 'Curit', '', 'Male', '1974-10-31', 'General Santos City', 'Married', 'Filipino', 'Barangay Chairman', 'Roman Catholic', 'A+', '', '', '', '', 'College Graduate', 'Purok 8', 'Block 12', 'Lot 2', '09166111421', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Regina Bilaossss', 'Cousin', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9486903345', 'default-img.svg', '', NULL, NULL, 'Administrator(Administrator)', '2023-03-18 10:17:32', NULL, '2023-04-23 14:45:36', NULL, NULL),
 (20, 'Ashly', 'Innocente', 'Legario', '', 'Female', '2005-06-25', 'Malilipot, Albay', 'Married', 'Filipino', '', '', '', '', '', '', '', 'College Undergraduate', 'Purok 13-A', 'Block 7', 'Lot 10', '09758969234', '', '', 'Registered Voter', '453457gfr3', '4b', '', '', '', '', '', '', '', '', '', '', '', 'Marilyn Cornelio', 'Cousin', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9166111422', 'default-img.svg', '', NULL, NULL, 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:24:13', NULL, NULL, NULL, NULL),
 (21, 'Anne', '', 'Innocente', '', 'Female', '2013-06-22', 'Malilipot, Albay', 'Single', 'Filipino', '', '', '', '', '', '', '', 'Highschool Graduate', 'Purok 7', 'Block 6', 'Lot 6', '09756873875', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Ash Innocente', 'Mother', 'Fatima, General Santos', '9486903674', 'Innocente_Anne.png', '', '', '', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:25:45', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:31:43', NULL, NULL),
-(22, 'Arvin', '', 'Sulartin', '', 'Male', '2001-06-23', 'Banga, South Cotabato', 'Single', 'Filipino', 'Barangay Clerk', 'Roman Catholic', 'A+', '', '', '', '', 'College Undergraduate', 'Purok 13-B', 'Block 5', 'Lot 11', '09345368374', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Ginga Sulartin', 'Father', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9375837534', 'Sulartin_Arvin.png', '', '', '', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:27:44', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-06-03 14:53:21', NULL, NULL),
+(22, 'Arvin', '', 'Sulartin', '', 'Male', '2001-06-23', 'Banga, South Cotabato', 'Single', 'Filipino', '', 'Roman Catholic', 'A+', '', '', '', '', 'College Undergraduate', 'Purok 13-B', 'Block 5', 'Lot 11', '09345368374', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Ginga Sulartin', 'Father', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9375837534', 'Sulartin_Arvin.png', '', '', '', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:27:44', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-06-03 14:53:21', NULL, NULL),
 (23, 'Amber', '', 'Fang', '', 'Female', '1964-05-30', 'Iloilo City', 'Married', 'Filipino', 'Barangay Clerk', '', '', '', '', '', '', 'College Graduate', 'Purok 13-A', 'Block 10', 'Lot 3', '09645673857', '', '', 'Registered Voter', '242y3rwe34', '43fd', '', '', '', '', '', '', '', '', '', '', '', 'Regina Bilaos', 'Cousin', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9169786296', 'Fang_Amber.png', '', '', '', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:30:12', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-06-03 14:52:48', NULL, NULL),
 (24, 'George', '', 'Larida', '', 'Male', '1952-06-14', 'General Santos City', 'Single', 'Filipino', '', '', '', '', '', '', 'Senior Citizen', 'Highschool Undergraduate', 'Purok 20', 'Blcok 5', 'Lot 6', '09345736573', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Amber Larida', 'Father', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9345837537', 'Larida_George.png', '', '', '', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:36:55', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-04-13 12:33:48', NULL, NULL),
 (25, 'Joseph', '', 'Pelle', '', 'Male', '1937-10-15', 'General Santos City', 'Married', 'Filipino', ' ', '', '', '', '', '', 'Senior Citizen', 'College Graduate', 'Purok 24', 'Block 2', 'Lot 9', '25', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'Marigold Quiapo', 'Cousin', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9673563534', 'default-img.svg', 'Changed Residency', '', '', 'Fatima_clerk9(Barangay Clerk - Admin)', ' ', 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-06-03 15:00:10', 'Administrator(Administrator)', '2023-04-23 14:24:22'),
@@ -270,6 +270,20 @@ CREATE TABLE `complainant` (
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
+INSERT INTO `complainant` (`complainant_id`, `resident_id`) VALUES 
+(1, 20),
+(2, 21),
+(3, 22),
+(4, 23),
+(5, 24),
+(6, 25),
+(7, 20),
+(8, 21),
+(9, 22),
+(10, 23),
+(11, 24),
+(12, 25);
+
 
 CREATE TABLE `non_resident_complainant` (
 		`complainant_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -287,6 +301,19 @@ CREATE TABLE `respondent` (
         PRIMARY KEY(`respondent_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
+INSERT INTO `respondent` (`respondent_id`, `resident_id`) VALUES 
+(1, 25),
+(2, 24),
+(3, 23),
+(4, 22),
+(5, 21),
+(6, 20),
+(7, 25),
+(8, 24),
+(9, 23),
+(10, 22),
+(11, 21),
+(12, 20);
 
 
 CREATE TABLE `mediator` (
@@ -298,6 +325,11 @@ CREATE TABLE `mediator` (
 	  FOREIGN KEY(`official_id`) REFERENCES official(`official_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `mediator` (`mediator_id`, `resident_id`, `official_id`) VALUES 
+(1, 30, 2),
+(2, 29, 4),
+(3, 28, 5),
+(4, 27, 6);
 
 CREATE TABLE `complaint` (
 		`case_no` int(11) NOT NULL AUTO_INCREMENT,
@@ -306,7 +338,7 @@ CREATE TABLE `complaint` (
         `mediator_id` int(11) NOT NULL,
         `or_no` int(8) NOT NULL,
         `reason` varchar(255) NOT NULL,
-        `complaint_description` varchar(255) NOT NULL,
+        `complaint_description` text NOT NULL,
         `date_of_hearing` datetime NOT NULL,
         `action_taken` varchar(255) NOT NULL,
         `complaint_status` varchar(50) NOT NULL,
@@ -322,6 +354,19 @@ CREATE TABLE `complaint` (
         FOREIGN KEY(`mediator_id`) REFERENCES `mediator`(`mediator_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
+INSERT INTO `complaint` (`complainant_id`, `respondent_id`, `mediator_id`, `or_no`, `reason`, `complaint_description`, `date_of_hearing`, `action_taken`, `complaint_status`, `created_by`, `date_created`, `updated_by`, `date_updated`, `restored_by`, `date_restored`) VALUES
+(1, 1, 1, 24645845, 'Property damage', 'Deliberate damage or negligence by another resident that affects neighboring units or common areas.', '2023-05-02','Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-22 12:10:52', NULL, NULL, NULL, NULL),
+(2, 2, 2, 23467023, 'Noise disturbances', 'Excessive noise from neighbors, including loud music, parties, or constant loud conversations.', '2023-05-09', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-29 14:17:02', NULL, NULL, NULL, NULL),
+(3, 3, 3, 98456566, 'Harassment', 'Verbal abuse, threats, or intimidation from another resident.', '2023-05-10', 'Mediation and dispute resolution',  'Mediation', 'Barangay Clerk - Encoder', '2023-04-29 14:10:52', NULL, NULL, NULL, NULL),
+(4, 4, 4, 23476345, 'Nuisance', 'Actions or habits that generate strong or offensive odors that impact neighboring residents.', '2023-05-11','Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-30 14:06:01', NULL, NULL, NULL, NULL),
+(5, 5, 1, 18923847, 'Harassment', 'Verbal abuse, threats, or intimidation from another resident.', '2023-05-12', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-30 14:57:12', NULL, NULL, NULL, NULL),
+(6, 6, 2, 23478645, 'Unauthorized guests', ' Residents who frequently have unauthorized guests or sublet their units without permission, causing security or occupancy concerns.', '2023-05-13', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-02 09:10:52', NULL, NULL, NULL, NULL),
+(7, 7, 3, 12676945, 'Disruptive behavior', ' Actions or habits that consistently disrupt the peace and tranquility of other residents, such as frequent arguing or fighting.', '2023-05-20',  'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-10 14:10:52', NULL, NULL, NULL, NULL),
+(8, 8, 4, 67834543, 'Harassment', 'Verbal abuse, threats, or intimidation from another resident.', '2023-05-22',  'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-12 14:10:52', NULL, NULL, NULL, NULL),
+(9, 9, 1, 42348765, 'Property damage', 'Deliberate damage or negligence by another resident that affects neighboring units or common areas.', '2023-05-28', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-18 14:10:52', NULL, NULL, NULL, NULL),
+(10, 10, 2, 96458978, 'Property damage', 'Deliberate damage or negligence by another resident that affects neighboring units or common areas.', '2023-05-29', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-19 14:10:52', NULL, NULL, NULL, NULL),
+(11, 11, 3, 23478654, 'Noise disturbances', 'Excessive noise from neighbors, including loud music, parties, or constant loud conversations.', '2023-06-08', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-28 14:10:52', NULL, NULL, NULL, NULL),
+(12, 12, 4, 98943522, 'Noise disturbances', 'Excessive noise from neighbors, including loud music, parties, or constant loud conversations.', '2023-05-11', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-06-01 14:10:52', NULL, NULL, NULL, NULL);
 
 CREATE TABLE `complaint_archive` (
 		`complaint_archive_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -372,15 +417,18 @@ CREATE VIEW resident_view AS
 SELECT *
 FROM resident;
 
-CREATE VIEW resident_complaint_count_view AS
-SELECT r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name, 
-       COUNT(DISTINCT c.complainant_id) AS Complainant_Count, 
-       COUNT(DISTINCT c.respondent_id) AS Respondent_Count
-FROM resident r
-LEFT JOIN complainant cm ON r.resident_id = cm.resident_id
-LEFT JOIN respondent rp ON r.resident_id = rp.resident_id
-LEFT JOIN complaint c ON cm.complainant_id = c.complainant_id OR rp.respondent_id = c.respondent_id
-GROUP BY r.resident_id, Full_Name;
+CREATE VIEW resident_complaint_view AS
+SELECT comp.case_no, CONCAT(c.first_name, ' ', c.last_name, ' ', c.mid_name, ' ', c.suffix) AS Complainant, 
+CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Repondent,
+CONCAT(m.first_name, ' ', m.last_name, ' ', m.mid_name, ' ', m.suffix) AS Mediator, 
+comp.reason, comp.complaint_description, comp.date_of_hearing, comp.action_taken, comp.complaint_status
+FROM complaint comp
+LEFT JOIN complainant com ON comp.complainant_id = com.complainant_id
+LEFT JOIN respondent res ON comp.respondent_id = res.respondent_id
+LEFT JOIN mediator med ON comp.mediator_id = med.mediator_id
+INNER JOIN resident c ON c.resident_id = com.resident_id
+INNER JOIN resident r ON r.resident_id = res.resident_id
+INNER JOIN resident m ON m.resident_id = med.resident_id;
 
 CREATE VIEW brgy_clearance_view AS
 SELECT c.brgy_clearance_id, r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name, c.purpose
@@ -426,15 +474,15 @@ DELIMITER ;
 
 -- Count the resident complaint record
 DELIMITER //
-CREATE FUNCTION resident_complaint_count(residentID INT)
-RETURNS INT
+CREATE FUNCTION resident_complaint_status(complaint_no INT)
+RETURNS varchar(255)
 READS SQL DATA
 BEGIN
-    DECLARE complaintCount INT;
-    SELECT * INTO complaintCount
-    FROM resident_complaint_count_view
-    WHERE resident_id = residentID;
-    RETURN complaintCount;
+    DECLARE complaintStatus varchar(255);
+    SELECT complaint_status INTO complaintStatus
+    FROM resident_complaint_view
+    WHERE case_no = complaint_no;
+    RETURN complaintStatus;
 END //
 DELIMITER ;
 

@@ -235,12 +235,39 @@ CREATE TABLE complainant (
 		resident_id INT NOT NULL,
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
 );
+INSERT INTO complainant (complainant_id, resident_id) VALUES 
+(1, 20),
+(2, 21),
+(3, 22),
+(4, 23),
+(5, 24),
+(6, 25),
+(7, 20),
+(8, 21),
+(9, 22),
+(10, 23),
+(11, 24),
+(12, 25);
+
 
 CREATE TABLE respondent (
 		respondent_id SERIAL PRIMARY KEY,
 		resident_id INT NOT NULL,
         FOREIGN KEY(resident_id) REFERENCES resident(resident_id)
 );
+INSERT INTO respondent (respondent_id, resident_id) VALUES 
+(1, 25),
+(2, 24),
+(3, 23),
+(4, 22),
+(5, 21),
+(6, 20),
+(7, 25),
+(8, 24),
+(9, 23),
+(10, 22),
+(11, 21),
+(12, 20);
 
 CREATE TABLE mediator (
 		mediator_id SERIAL PRIMARY KEY,
@@ -249,6 +276,11 @@ CREATE TABLE mediator (
 		FOREIGN KEY(resident_id) REFERENCES resident(resident_id),
 		FOREIGN KEY(official_id) REFERENCES official(official_id)
 );
+INSERT INTO mediator (mediator_id, resident_id, official_id) VALUES 
+(1, 30, 2),
+(2, 29, 4),
+(3, 28, 5),
+(4, 27, 6);
 
 CREATE TABLE complaint (
 		case_no SERIAL PRIMARY KEY,
@@ -271,6 +303,21 @@ CREATE TABLE complaint (
 		FOREIGN KEY(respondent_id) REFERENCES respondent(respondent_id),
 		FOREIGN KEY(mediator_id) REFERENCES mediator(mediator_id)
 );
+
+INSERT INTO complaint (complainant_id, respondent_id, mediator_id, or_no, reason, complaint_description, date_of_hearing, action_taken, complaint_status, created_by, date_created, updated_by, date_updated, restored_by, date_restored) VALUES
+(1, 1, 1, 24645845, 'Property damage', 'Deliberate damage or negligence by another resident that affects neighboring units or common areas.', '2023-05-02','Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-22 12:10:52', NULL, NULL, NULL, NULL),
+(2, 2, 2, 23467023, 'Noise disturbances', 'Excessive noise from neighbors, including loud music, parties, or constant loud conversations.', '2023-05-09', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-29 14:17:02', NULL, NULL, NULL, NULL),
+(3, 3, 3, 98456566, 'Harassment', 'Verbal abuse, threats, or intimidation from another resident.', '2023-05-10', 'Mediation and dispute resolution',  'Mediation', 'Barangay Clerk - Encoder', '2023-04-29 14:10:52', NULL, NULL, NULL, NULL),
+(4, 4, 4, 23476345, 'Nuisance', 'Actions or habits that generate strong or offensive odors that impact neighboring residents.', '2023-05-11','Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-30 14:06:01', NULL, NULL, NULL, NULL),
+(5, 5, 1, 18923847, 'Harassment', 'Verbal abuse, threats, or intimidation from another resident.', '2023-05-12', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-04-30 14:57:12', NULL, NULL, NULL, NULL),
+(6, 6, 2, 23478645, 'Unauthorized guests', ' Residents who frequently have unauthorized guests or sublet their units without permission, causing security or occupancy concerns.', '2023-05-13', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-02 09:10:52', NULL, NULL, NULL, NULL),
+(7, 7, 3, 12676945, 'Disruptive behavior', ' Actions or habits that consistently disrupt the peace and tranquility of other residents, such as frequent arguing or fighting.', '2023-05-20',  'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-10 14:10:52', NULL, NULL, NULL, NULL),
+(8, 8, 4, 67834543, 'Harassment', 'Verbal abuse, threats, or intimidation from another resident.', '2023-05-22',  'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-12 14:10:52', NULL, NULL, NULL, NULL),
+(9, 9, 1, 42348765, 'Property damage', 'Deliberate damage or negligence by another resident that affects neighboring units or common areas.', '2023-05-28', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-18 14:10:52', NULL, NULL, NULL, NULL),
+(10, 10, 2, 96458978, 'Property damage', 'Deliberate damage or negligence by another resident that affects neighboring units or common areas.', '2023-05-29', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-19 14:10:52', NULL, NULL, NULL, NULL),
+(11, 11, 3, 23478654, 'Noise disturbances', 'Excessive noise from neighbors, including loud music, parties, or constant loud conversations.', '2023-06-08', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-05-28 14:10:52', NULL, NULL, NULL, NULL),
+(12, 12, 4, 98943522, 'Noise disturbances', 'Excessive noise from neighbors, including loud music, parties, or constant loud conversations.', '2023-05-11', 'Mediation and dispute resolution', 'Mediation', 'Barangay Clerk - Encoder', '2023-06-01 14:10:52', NULL, NULL, NULL, NULL);
+
 
 CREATE TABLE complaint_archive (
     complaint_archive_id SERIAL PRIMARY KEY,
