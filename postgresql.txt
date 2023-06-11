@@ -2,6 +2,10 @@
 \dU+ rolename - To view specific role
 SET ROLE rolename;
 
+-- USER
+\du
+select current_user;
+
 DROP ROLE superadmin;
 DROP USER brgy_administrator;
 
@@ -14,10 +18,6 @@ DROP ROLE complaint_encoder;
 DROP ROLE complaint_admin;
 DROP ROLE resident_encoder;
 DROP ROLE resident_admin;
-
--- USER
-\du
-select current_user;
 
 -- Drop the database first before dropping user.
 DROP USER brgy_captain;
