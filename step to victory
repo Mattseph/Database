@@ -1,8 +1,15 @@
+MySQL
+Step 1: Create a superadmin role and brgy_administrator user.
+Step 2: Log in as brgy_administrator and set role to superadmin.
+Step 3: source filepath.
+
+Postgresql
 Step 1: Log in as postgres user.
 Step 2: Create superadmin role and brgy_administrator.
 Step 3: Set the superadmin role to postgres user and Create a database. 
 Step 4: Exit, And Login into brgy_administartor user.
-Step 5: Connect to database and Create a schema.
-Step 6: Create tables, views, triggers, functions, stored procedures.
-Step 7: Create roles and user.
-Step 8: Grant roles to users.
+Step 5: Set role superadmin to brgy_administrator.
+Step 6: Connect to database and Create a schema.
+Step 7: Create tables, views, triggers, functions, stored procedures.
+Step 8: Create roles and user.
+Step 9: Grant roles to users.
