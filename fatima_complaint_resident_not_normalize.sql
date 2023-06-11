@@ -384,8 +384,8 @@ GROUP BY r.resident_id, Full_Name;
 
 CREATE VIEW brgy_clearance_view AS
 SELECT c.brgy_clearance_id, r.resident_id, CONCAT(r.first_name, ' ', r.last_name, ' ', r.mid_name, ' ', r.suffix) AS Full_Name, c.purpose
-FROM resident r
-LEFT JOIN barangay_clearance c ON r.resident_id = c.resident_id;
+FROM barangay_clearance c 
+LEFT JOIN resident r ON r.resident_id = c.resident_id;
 
 
 -- View the details of complaints along with the names of complainants and respondents
@@ -544,13 +544,15 @@ END //
 DELIMITER ;
 
 -- --------------------------------------------------------------------------------------------------------------------------
-CREATE ROLE 'superadmin'; 
-GRANT ALL PRIVILEGES ON complaintsc.* TO 'superadmin';
-
 -- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
-CREATE USER 'brgy_administrator' IDENTIFIED BY 'Brgy_superAdmin1';
-GRANT USAGE ON complaintsc.* TO 'brgy_administrator';
-GRANT 'superadmin' TO 'brgy_administrator';
+
+-- CREATE ROLE 'superadmin'; 
+-- GRANT ALL PRIVILEGES ON *.* TO 'superadmin' WITH GRANT OPTION;
+
+
+-- CREATE USER 'brgy_administrator' IDENTIFIED BY 'Brgy_superAdmin1';
+-- GRANT USAGE ON complaintsc.* TO 'brgy_administrator';
+-- GRANT superadmin TO 'brgy_administrator';
 
 -- ROLES
 CREATE ROLE 'captain'; 
@@ -558,6 +560,7 @@ GRANT SELECT ON complaintsc.resident TO 'captain';
 GRANT SELECT ON complaintsc.resident_archive TO 'captain';
 GRANT SELECT ON complaintsc.complaint TO 'captain';
 GRANT SELECT ON complaintsc.complaint_archive TO 'captain';
+GRANT SHOW VIEW, SELECT ON complaintsc.resident_view TO 'captain';
 
 CREATE ROLE 'secretary'; 
 GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'secretary';
@@ -570,7 +573,9 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.mediator TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'secretary';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'secretary';
 GRANT SELECT, UPDATE ON complaintsc.official_archive TO 'secretary';
-GRANT SHOW VIEW ON complaintsc.* TO 'secretary';
+GRANT SHOW VIEW, SELECT ON complaintsc.* TO 'secretary';
+GRANT EXECUTE ON *.* TO 'secretary';
+
 
 CREATE ROLE 'resident_admin'; 
 GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'resident_admin';
@@ -578,7 +583,10 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.resident TO 'resident_admin'
 GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.official TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'resident_admin';
-GRANT SHOW VIEW ON complaintsc.* TO 'resident_admin';
+GRANT SHOW VIEW, SELECT ON complaintsc.official_info_view TO 'resident_admin';
+GRANT SHOW VIEW, SELECT ON complaintsc.resident_view TO 'resident_admin';
+GRANT SHOW VIEW, SELECT ON complaintsc.brgy_clearance_view TO 'resident_admin';
+GRANT EXECUTE ON *.* TO 'resident_admin';
 
 CREATE ROLE 'resident_encoder'; 
 GRANT INSERT, SELECT ON complaintsc.resident TO 'resident_encoder';
@@ -593,7 +601,8 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.respondent TO 'complaint_adm
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.mediator TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.official TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'complaint_admin';
-GRANT SHOW VIEW ON complaintsc.* TO 'complaint_admin';
+GRANT SHOW VIEW, SELECT ON complaintsc.* TO 'complaint_admin';
+GRANT EXECUTE ON *.* TO 'complaint_admin';
 
 CREATE ROLE 'complaint_encoder';
 GRANT SELECT ON complaintsc.resident TO 'complaint_encoder';
