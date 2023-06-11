@@ -1,8 +1,14 @@
 -- ROLES
 SHOW GRANTS FOR 'username';
 SHOW GRANTS FOR 'username' USING 'role';
+-- USERS
+SELECT user FROM mysql.user;
+SELECT current_user;
+SELECT current_role();
 
-DROP ROLE IF EXISTS 'superadmin';
+-- DROP ROLE IF EXISTS 'superadmin';
+-- DROP USER IF EXISTS 'brgy_administrator';
+
 DROP ROLE IF EXISTS 'captain';
 DROP ROLE IF EXISTS 'secretary';
 DROP ROLE IF EXISTS 'resident_encoder';
@@ -10,12 +16,6 @@ DROP ROLE IF EXISTS 'resident_admin';
 DROP ROLE IF EXISTS 'complaint_encoder';
 DROP ROLE IF EXISTS 'complaint_admin';
 
--- USERS
-SELECT user FROM mysql.user;
-SELECT current_user;
-SELECT current_role();
-
-DROP USER IF EXISTS 'brgy_administrator';
 DROP USER IF EXISTS 'brgy_captain';
 DROP USER IF EXISTS 'brgy_secretary';
 DROP USER IF EXISTS 'clerk_resident_encoder';
@@ -29,9 +29,7 @@ DROP USER IF EXISTS 'clerk_complaint_admin';
 SHOW TRIGGERS FROM database_name LIKE 'table_name';
 
 SELECT TRIGGER_NAME, EVENT_OBJECT_TABLE, ACTION_TIMING, EVENT_MANIPULATION
-FROM INFORMATION_SCHEMA.TRIGGERS;
-
-WHERE TRIGGER_SCHEMA = 'your_database_name';
+FROM INFORMATION_SCHEMA.TRIGGERS WHERE TRIGGER_SCHEMA = 'complaintsc';
 DROP TRIGGER IF EXISTS before_resident_delete;
 DROP TRIGGER IF EXISTS before_complaint_delete;
 DROP TRIGGER IF EXISTS before_resident_delete;
