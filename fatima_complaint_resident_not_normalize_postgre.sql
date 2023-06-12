@@ -566,14 +566,14 @@ EXECUTE FUNCTION before_official_delete();
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- ROLE
-CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
-GRANT ALL PRIVILEGES ON DATABASE complaintdb TO superadmin;
- 
--- GRANTING ROLES TO USERS
--- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
- CREATE USER brgy_administrator WITH PASSWORD 'Brgy_superAdmin';
- ALTER USER brgy_administrator SET SEARCH_PATH TO complaintsc;
- GRANT superadmin TO brgy_administrator;
+-- CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
+-- GRANT ALL PRIVILEGES ON DATABASE complaintdb TO superadmin;
+--  
+-- -- GRANTING ROLES TO USERS
+-- -- ADMINISTRATOR - HAVE ALL OF THE PRIVILEGES
+-- CREATE USER brgy_administrator WITH PASSWORD 'Brgy_superAdmin';
+-- ALTER USER brgy_administrator SET SEARCH_PATH TO complaintsc;
+-- GRANT superadmin TO brgy_administrator;
 
 CREATE ROLE captain LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO captain;
@@ -616,13 +616,14 @@ CREATE ROLE resident_admin LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO resident_admin;
 GRANT USAGE ON SCHEMA complaintsc TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO resident_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.resident TO resident_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident_archive TO resident_admin;
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.official TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_admin;
 GRANT SELECT ON resident_view TO resident_admin;
 GRANT SELECT ON brgy_clearance_view TO resident_admin;
 GRANT SELECT ON official_view TO resident_admin;
+ALTER TABLE complaintsc.resident OWNER TO resident_admin;
+ALTER TABLE complaintsc.resident_archive OWNER TO resident_admin;
+
 
 CREATE ROLE complaint_encoder LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO complaint_encoder;
@@ -638,11 +639,6 @@ GRANT CONNECT ON DATABASE complaintdb TO complaint_admin;
 GRANT USAGE ON SCHEMA complaintsc TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO complaint_admin;
 GRANT SELECT ON TABLE complaintsc.resident TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complaint TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complainant TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.respondent TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.mediator TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.official TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO complaint_admin;
 GRANT SELECT ON resident_view TO complaint_admin;
@@ -650,6 +646,11 @@ GRANT SELECT ON resident_complaint_count_view TO complaint_admin;
 GRANT SELECT ON brgy_clearance_view TO complaint_admin;
 GRANT SELECT ON complaint_details_view TO complaint_admin;
 GRANT SELECT ON official_view TO complaint_admin;
+ALTER TABLE complaintsc.complaint OWNER TO complaint_admin;
+ALTER TABLE complaintsc.complainant OWNER TO complaint_admin;
+ALTER TABLE complaintsc.respondent OWNER TO complaint_admin;
+ALTER TABLE complaintsc.mediator OWNER TO complaint_admin;
+ALTER TABLE complaintsc.complaint_archive OWNER TO complaint_admin;
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
