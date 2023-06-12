@@ -1,4 +1,5 @@
 -- ROLES
+SELECT * FROM mysql.role_edges;
 SHOW GRANTS FOR 'username';
 SHOW GRANTS FOR 'username' USING 'role';
 -- USERS
