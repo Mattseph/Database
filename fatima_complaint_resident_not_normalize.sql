@@ -405,9 +405,12 @@ CREATE TABLE `users` (
 SET FOREIGN_KEY_CHECKS = 0;
 INSERT INTO `users` (`user_id`, `resident_id`, `official_id`, `username`, `password`, `role`) VALUES
 (1, NULL, NULL, 'administrator', 'b6f8ebf6b21eb164447365d0582e3ce6', 'Administrator'),
-(2, 23, 4, 'fatima_clerk17', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Clerk - Admin'),
-(3, 27, 2, 'fatima_clerk15', '283ec530b7fbafbea6ee93ebe5e1e291', 'Barangay Clerk - Admin'),
-(4, 26, 3, 'fatima_secretary12', '6fbdf502ad97e4a4bd8bf5cd22499efc', 'Barangay Secretary');
+(2, 13, 1, 'brgy_captain', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Captain'),
+(3, 26, 3, 'brgy_secretary', '6fbdf502ad97e4a4bd8bf5cd22499efc', 'Barangay Secretary'),
+(4, 30, 2, 'clerk_residentAdmin', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Clerk - ResidentAdmin'),
+(5, 29, 4, 'clerk_residentEncoder', '283ec530b7fbafbea6ee93ebe5e1e291', 'Barangay Clerk - ResidentEncoder'),
+(6, 28, 5, 'clerk_complaintAdmin', '283ec530b7fbafbea6ee93ebe5e1e291', 'Barangay Clerk - ComplaintAdmin'),
+(7, 27, 6, 'clerk_complaintEncoder', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Clerk - ComplaintEncoder');
 -- ------------------------------------------------------------------------------------------------------------------------------------------------
 
 -- VIEWS
@@ -605,9 +608,10 @@ DELIMITER ;
 -- ROLES
 CREATE ROLE 'captain'; 
 GRANT SELECT ON complaintsc.resident TO 'captain';
-GRANT SELECT ON complaintsc.resident_archive TO 'captain';
 GRANT SELECT ON complaintsc.complaint TO 'captain';
-GRANT SELECT ON complaintsc.complaint_archive TO 'captain';
+GRANT SELECT ON complaintsc.complainant TO 'captain';
+GRANT SELECT ON complaintsc.respondent TO 'captain';
+GRANT SELECT ON complaintsc.mediator TO 'captain';
 GRANT SHOW VIEW, SELECT ON complaintsc.resident_view TO 'captain';
 
 CREATE ROLE 'secretary'; 
@@ -639,7 +643,7 @@ CREATE ROLE 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.users TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.resident TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.resident_archive TO 'resident_admin';
-GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.official TO 'resident_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'resident_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'resident_admin';
 GRANT SHOW VIEW, SELECT ON complaintsc.official_info_view TO 'resident_admin';
 GRANT SHOW VIEW, SELECT ON complaintsc.resident_view TO 'resident_admin';
@@ -657,7 +661,7 @@ GRANT INSERT, SELECT, UPDATE ON complaintsc.complaint_archive TO 'complaint_admi
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.complainant TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.respondent TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.mediator TO 'complaint_admin';
-GRANT INSERT, SELECT, UPDATE, DELETE ON complaintsc.official TO 'complaint_admin';
+GRANT INSERT, SELECT, UPDATE ON complaintsc.official TO 'complaint_admin';
 GRANT INSERT, SELECT, UPDATE ON complaintsc.official_archive TO 'complaint_admin';
 GRANT SHOW VIEW, SELECT ON complaintsc.* TO 'complaint_admin';
 GRANT EXECUTE ON *.* TO 'complaint_admin';

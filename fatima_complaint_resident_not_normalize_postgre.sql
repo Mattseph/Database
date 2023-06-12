@@ -347,7 +347,7 @@ CREATE TABLE users (
     official_id INTEGER,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
-    role VARCHAR(30) NOT NULL,
+    role VARCHAR(40) NOT NULL,
     FOREIGN KEY (resident_id) REFERENCES resident (resident_id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (official_id) REFERENCES official (official_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -355,9 +355,12 @@ CREATE TABLE users (
 -- Insert data into the users table
 INSERT INTO users (user_id, resident_id, official_id, username, password, role) VALUES
 (1, NULL, NULL, 'administrator', 'b6f8ebf6b21eb164447365d0582e3ce6', 'Administrator'),
-(2, 23, 4, 'fatima_clerk17', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Clerk - Admin'),
-(3, 27, 2, 'fatima_clerk15', '283ec530b7fbafbea6ee93ebe5e1e291', 'Barangay Clerk - Admin'),
-(4, 26, 3, 'fatima_secretary12', '6fbdf502ad97e4a4bd8bf5cd22499efc', 'Barangay Secretary');
+(2, 13, 1, 'brgy_captain', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Captain'),
+(3, 26, 3, 'brgy_secretary', '6fbdf502ad97e4a4bd8bf5cd22499efc', 'Barangay Secretary'),
+(4, 30, 2, 'clerk_residentAdmin', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Clerk - ResidentAdmin'),
+(5, 29, 4, 'clerk_residentEncoder', '283ec530b7fbafbea6ee93ebe5e1e291', 'Barangay Clerk - ResidentEncoder'),
+(6, 28, 5, 'clerk_complaintAdmin', '283ec530b7fbafbea6ee93ebe5e1e291', 'Barangay Clerk - ComplaintAdmin'),
+(7, 27, 6, 'clerk_complaintEncoder', '0c39e5182073049ffd3d8d25280a9a49', 'Barangay Clerk - ComplaintEncoder');
 
 -- -------------------------------------------------------------------------------------------------------------------
 
@@ -579,9 +582,7 @@ CREATE ROLE captain LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO captain;
 GRANT USAGE ON SCHEMA complaintsc TO captain;
 GRANT SELECT ON TABLE complaintsc.resident TO captain;
-GRANT SELECT ON TABLE complaintsc.resident_archive TO captain;
 GRANT SELECT ON TABLE complaintsc.complaint TO captain;
-GRANT SELECT ON TABLE complaintsc.complaint_archive TO captain;
 GRANT SELECT ON TABLE complaintsc.complainant TO captain;
 GRANT SELECT ON TABLE complaintsc.respondent TO captain;
 GRANT SELECT ON TABLE complaintsc.mediator TO captain;
@@ -598,9 +599,8 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO secretary
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complainant TO secretary;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.respondent TO secretary;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.mediator TO secretary;
-GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO secretary;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO secretary;
-GRANT SELECT, UPDATE ON TABLE complaintsc.official_archive TO secretary;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO secretary;
 GRANT SELECT ON resident_view TO secretary;
 GRANT SELECT ON resident_complaint_count_view TO secretary;
 GRANT SELECT ON brgy_clearance_view TO secretary;
@@ -616,13 +616,15 @@ CREATE ROLE resident_admin LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO resident_admin;
 GRANT USAGE ON SCHEMA complaintsc TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO resident_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.official TO resident_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.resident TO resident_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.resident_archive TO resident_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO resident_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_admin;
 GRANT SELECT ON resident_view TO resident_admin;
 GRANT SELECT ON brgy_clearance_view TO resident_admin;
 GRANT SELECT ON official_view TO resident_admin;
-ALTER TABLE complaintsc.resident OWNER TO resident_admin;
-ALTER TABLE complaintsc.resident_archive OWNER TO resident_admin;
+-- ALTER TABLE complaintsc.resident OWNER TO resident_admin;
+-- ALTER TABLE complaintsc.resident_archive OWNER TO resident_admin;
 
 
 CREATE ROLE complaint_encoder LOGIN;
@@ -639,18 +641,23 @@ GRANT CONNECT ON DATABASE complaintdb TO complaint_admin;
 GRANT USAGE ON SCHEMA complaintsc TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.users TO complaint_admin;
 GRANT SELECT ON TABLE complaintsc.resident TO complaint_admin;
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.official TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complaint TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complainant TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.respondent TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.mediator TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.complaint_archive TO complaint_admin;
+GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official TO complaint_admin;
 GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO complaint_admin;
 GRANT SELECT ON resident_view TO complaint_admin;
 GRANT SELECT ON resident_complaint_count_view TO complaint_admin;
 GRANT SELECT ON brgy_clearance_view TO complaint_admin;
 GRANT SELECT ON complaint_details_view TO complaint_admin;
 GRANT SELECT ON official_view TO complaint_admin;
-ALTER TABLE complaintsc.complaint OWNER TO complaint_admin;
-ALTER TABLE complaintsc.complainant OWNER TO complaint_admin;
-ALTER TABLE complaintsc.respondent OWNER TO complaint_admin;
-ALTER TABLE complaintsc.mediator OWNER TO complaint_admin;
-ALTER TABLE complaintsc.complaint_archive OWNER TO complaint_admin;
+-- ALTER TABLE complaintsc.complaint OWNER TO complaint_admin;
+-- ALTER TABLE complaintsc.complainant OWNER TO complaint_admin;
+-- ALTER TABLE complaintsc.respondent OWNER TO complaint_admin;
+-- ALTER TABLE complaintsc.mediator OWNER TO complaint_admin;
+-- ALTER TABLE complaintsc.complaint_archive OWNER TO complaint_admin;
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
