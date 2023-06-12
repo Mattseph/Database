@@ -1,4 +1,5 @@
 -- ROLES
+\dp
 \dU+ rolename - To view specific role
 SET ROLE rolename;
 
@@ -65,4 +66,13 @@ WHERE proname = 'GetResidentsByAgeRange';
 SELECT proname
 FROM pg_proc
 WHERE pronamespace = 'complaintsc'::regnamespace;
+
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.resident TO resident_admin;
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.resident_archive TO resident_admin;
+
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complaint TO complaint_admin;
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complainant TO complaint_admin;
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.respondent TO complaint_admin;
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.mediator TO complaint_admin;
+-- GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE complaintsc.complaint_archive TO complaint_admin;
 
