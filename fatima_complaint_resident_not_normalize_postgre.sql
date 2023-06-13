@@ -567,7 +567,157 @@ BEFORE DELETE ON official
 FOR EACH ROW
 EXECUTE FUNCTION before_official_delete();
 -- ---------------------------------------------------------------------------------------------------------------------------------------------------
+-- Stored Procedure
 
+-- STORED PROCEDURES
+CREATE OR REPLACE PROCEDURE insert_resident(
+    p_first_name VARCHAR(255),
+    p_mid_name VARCHAR(50),
+    p_last_name VARCHAR(50),
+    p_suffix VARCHAR(10),
+    p_sex VARCHAR(20),
+    p_date_of_birth DATE,
+    p_place_of_birth VARCHAR(255),
+    p_civil_status VARCHAR(20),
+    p_nationality VARCHAR(20),
+    p_occupation VARCHAR(50),
+    p_religion VARCHAR(50),
+    p_blood_type VARCHAR(10),
+    p_fourps_status VARCHAR(5),
+    p_disability_status VARCHAR(30),
+    p_type_disability VARCHAR(50),
+    p_senior_status VARCHAR(20),
+    p_educational_attainment VARCHAR(30),
+    p_phone_number VARCHAR(11),
+    p_tel_number VARCHAR(12),
+    p_email VARCHAR(100),
+    p_purok VARCHAR(20),
+    p_street VARCHAR(50),
+    p_lot_number VARCHAR(20),
+    p_voter_status VARCHAR(20),
+    p_voter_id VARCHAR(20),
+    p_precinct_number VARCHAR(20),
+    p_national_id VARCHAR(55),
+    p_vaccine_status VARCHAR(10),
+    p_vaccine_1 VARCHAR(15),
+    p_vaccine_date_1 DATE,
+    p_vaccine_2 VARCHAR(15),
+    p_vaccine_date_2 DATE,
+    p_booster_status VARCHAR(10),
+    p_booster_1 VARCHAR(15),
+    p_booster_date_1 DATE,
+    p_booster_2 VARCHAR(15),
+    p_booster_date_2 DATE,
+    p_emergency_person VARCHAR(255),
+    p_relationship VARCHAR(20),
+    p_emergency_address VARCHAR(255),
+    p_emergency_contact VARCHAR(12),
+    p_img_url VARCHAR(255),
+    p_alien_status VARCHAR(50),
+    p_deceased_status VARCHAR(50),
+    p_date_of_death DATE,
+    p_created_by VARCHAR(50)
+)
+AS $$
+BEGIN
+    INSERT INTO resident (
+        first_name,
+        mid_name,
+        last_name,
+        suffix,
+        sex,
+        date_of_birth,
+        place_of_birth,
+        civil_status,
+        nationality,
+        occupation,
+        religion,
+        blood_type,
+        fourps_status,
+        disability_status,
+        type_disability,
+        senior_status,
+        educational_attainment,
+        phone_number,
+        tel_number,
+        email,
+        purok,
+        street,
+        lot_number,
+        voter_status,
+        voter_id,
+        precinct_number,
+        national_id,
+        vaccine_status,
+        vaccine_1,
+        vaccine_date_1,
+        vaccine_2,
+        vaccine_date_2,
+        booster_status,
+        booster_1,
+        booster_date_1,
+        booster_2,
+        booster_date_2,
+        emergency_person,
+        relationship,
+        emergency_address,
+        emergency_contact,
+        img_url,
+        alien_status,
+        deceased_status,
+        date_of_death,
+        created_by
+    ) VALUES (
+        p_first_name,
+        p_mid_name,
+        p_last_name,
+        p_suffix,
+        p_sex,
+        p_date_of_birth,
+        p_place_of_birth,
+        p_civil_status,
+        p_nationality,
+        p_occupation,
+        p_religion,
+        p_blood_type,
+        p_fourps_status,
+        p_disability_status,
+        p_type_disability,
+        p_senior_status,
+        p_educational_attainment,
+        p_phone_number,
+        p_tel_number,
+        p_email,
+        p_purok,
+        p_street,
+        p_lot_number,
+        p_voter_status,
+        p_voter_id,
+        p_precinct_number,
+        p_national_id,
+        p_vaccine_status,
+        p_vaccine_1,
+        p_vaccine_date_1,
+        p_vaccine_2,
+        p_vaccine_date_2,
+        p_booster_status,
+        p_booster_1,
+        p_booster_date_1,
+        p_booster_2,
+        p_booster_date_2,
+        p_emergency_person,
+        p_relationship,
+        p_emergency_address,
+        p_emergency_contact,
+        p_img_url,
+        p_alien_status,
+        p_deceased_status,
+        p_date_of_death,
+        p_created_by
+    );
+END;
+$$ LANGUAGE plpgsql;
+-- -----------------------------------------------------------------------------------------------------------------------------------------------------
 -- ROLE
 -- CREATE ROLE superadmin WITH LOGIN SUPERUSER CREATEDB CREATEROLE;
 -- GRANT ALL PRIVILEGES ON DATABASE complaintdb TO superadmin;
@@ -648,6 +798,10 @@ GRANT INSERT, SELECT ON TABLE complaintsc.complaint TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.complainant TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.respondent TO complaint_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.mediator TO complaint_encoder;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_case_no_seq TO complaint_encoder;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complainant_complainant_id_seq TO complaint_encoder;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE respondent_respondent_id_seq TO complaint_encoder;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE mediator_mediator_id_seq TO complaint_encoder;
 
 CREATE ROLE complaint_admin LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO complaint_admin;
@@ -666,7 +820,6 @@ GRANT SELECT ON resident_complaint_count_view TO complaint_admin;
 GRANT SELECT ON brgy_clearance_view TO complaint_admin;
 GRANT SELECT ON complaint_details_view TO complaint_admin;
 GRANT SELECT ON official_view TO complaint_admin;
-GRANT USAGE, SELECT ON SEQUENCE resident_resident_id_seq TO complaint_admin;
 GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_case_no_seq TO complaint_admin;
 GRANT USAGE, SELECT, UPDATE ON SEQUENCE complainant_complainant_id_seq TO complaint_admin;
 GRANT USAGE, SELECT, UPDATE ON SEQUENCE respondent_respondent_id_seq TO complaint_admin;
