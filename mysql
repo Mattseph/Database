@@ -55,15 +55,19 @@ SELECT calculate_age(date_of_birth) AS age FROM resident;
 DROP FUNCTION IF EXISTS function_name;
 
 -- STORED PROCEDURE
-
+SHOW PROCEDURE STATUS WHERE Db = 'complaintsc';
 call storedProcedureName(Param1, Param2, ....) - To use the stored procedure
-
-SELECT ROUTINE_NAME, ROUTINE_TYPE
-FROM information_schema.ROUTINES
-WHERE ROUTINE_SCHEMA = 'complaintsc';
-
 DROP PROCEDURE [IF EXISTS] procedure_name;
 
+
+call insert_resident(
+    'Johner', 'Doe', 'Smithdd', 'Jr', 'Male', '1990-01-01', 'City', 'Single', 'American', 'Engineer', 'Christian',
+    'O+', 'No', 'No', '', 'No', 'Bachelor', '1234567890', '9876543210', 'john.doe@example.com', 'Purok 1',
+    'Street 123', 'Lot 456', 'Yes', 'V123456', 'P7890', '1234567890123456', 'Vaccinated',
+    'Vaccine1', '2022-01-01', 'Vaccine2', '2022-03-01', '',
+    '', NULL, '', NULL, 'Jane Doe', 'Spouse', 'Emergency Address', '1234567890', 'https://example.com/image.jpg',
+    '', 'Alive', NULL, 'Admin'
+);
 
 
 
