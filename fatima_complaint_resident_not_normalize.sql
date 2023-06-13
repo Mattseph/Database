@@ -396,7 +396,7 @@ CREATE TABLE `users` (
         `official_id` int(11) DEFAULT NULL,
         `username` varchar(50) NOT NULL,
         `password` varchar(50) NOT NULL,
-        `role` varchar(30) NOT NULL,
+        `role` varchar(40) NOT NULL,
         PRIMARY KEY(`user_id`),
         FOREIGN KEY(`resident_id`) REFERENCES resident(`resident_id`) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY(`official_id`) REFERENCES official(`official_id`) ON DELETE CASCADE ON UPDATE CASCADE
