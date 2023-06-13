@@ -68,9 +68,6 @@ INSERT INTO resident (resident_id, first_name, mid_name, last_name, suffix, sex,
 (11, 'Renante', 'D', 'Curit', '', 'Male', '1974-10-31', 'General Santos City', 'Married', 'Filipino', 'Barangay Chairman', 'Roman Catholic', 'A+', '', '', '', '', 'College Graduate', 'Purok 8', 'Block 12', 'Lot 2', '09166111421', '', '', '', '', '', '', '', '', NULL, '', NULL, '', '', NULL, '', NULL, 'Regina Bilaossss', 'Cousin', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9486903345', 'default-img.svg', '', NULL, NULL, 'Administrator(Administrator)', '2023-03-18 10:17:32', 'Administrator(Administrator)', '2023-04-23 14:45:36', NULL, NULL),
 (12, 'Ashly', 'Innocente', 'Legario', '', 'Female', '2005-06-25', 'Malilipot, Albay', 'Married', 'Filipino', '', '', '', '', '', '', '', 'College Undergraduate', 'Purok 13-A', 'Block 7', 'Lot 10', '09758969234', '', '', 'Registered Voter', '453457gfr3', '4b', '', '', '', NULL, '', NULL, '', '', NULL, '', NULL, 'Marilyn Cornelio', 'Cousin', 'Purok Pag-asa, Barangay Rizal, Banga, South Cotabato', '9166111422', 'default-img.svg', '', NULL, NULL, 'Fatima_clerk9(Barangay Clerk - Admin)', '2023-03-29 13:24:13', NULL, NULL, NULL, NULL);
 
-CALL insert_resident('Matthew', '', 'Panizal', '', 'Male', '2023-06-03', 'Zamboanga Del Norte', 'Nullified', 'Filipino', 'Barangay Clerk', 'Islam', 'B-', '4Ps', '', '', '', 'Highschool Undergraduate', 'Purok 11-B', 'Block 3', 'Lot 2', '09458394589', '', 'panizal@gmail.com', 'Registered Voter', '234234', '0813c', '', 'Vaccinated', 'Bharat', '2021-04-29', 'Pfizer', '2021-06-03', 'Boostered', 'Moderna', '2022-06-03', '', NULL, 'Maricar Panizal', 'Cousin', 'Esperansa', '9486903345', 'default-img.svg', '', NULL, NULL, 'Administrator(Administrator)');
-
-
 CREATE TABLE resident_archive (
         resident_archive_id SERIAL PRIMARY KEY,
         resident_id INTEGER NOT NULL,
