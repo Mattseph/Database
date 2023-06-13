@@ -606,11 +606,22 @@ GRANT SELECT ON resident_complaint_count_view TO secretary;
 GRANT SELECT ON brgy_clearance_view TO secretary;
 GRANT SELECT ON complaint_details_view TO secretary;
 GRANT SELECT ON official_view TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE users_user_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE resident_resident_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE resident_archive_resident_archive_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_case_no_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complainant_complainant_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE respondent_respondent_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE mediator_mediator_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_archive_complaint_archive_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_official_id_seq TO secretary;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_archive_official_archive_id_seq TO secretary;
 
 CREATE ROLE resident_encoder LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO resident_encoder;
 GRANT USAGE ON SCHEMA complaintsc TO resident_encoder;
 GRANT INSERT, SELECT ON TABLE complaintsc.resident TO resident_encoder;
+GRANT USAGE, SELECT ON SEQUENCE resident_resident_id_seq TO resident_encoder;
 
 CREATE ROLE resident_admin LOGIN;
 GRANT CONNECT ON DATABASE complaintdb TO resident_admin;
@@ -623,8 +634,10 @@ GRANT INSERT, SELECT, UPDATE ON TABLE complaintsc.official_archive TO resident_a
 GRANT SELECT ON resident_view TO resident_admin;
 GRANT SELECT ON brgy_clearance_view TO resident_admin;
 GRANT SELECT ON official_view TO resident_admin;
--- ALTER TABLE complaintsc.resident OWNER TO resident_admin;
--- ALTER TABLE complaintsc.resident_archive OWNER TO resident_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE resident_resident_id_seq TO resident_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE resident_archive_resident_archive_id_seq TO resident_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_official_id_seq TO resident_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_archive_official_archive_id_seq TO resident_admin;
 
 
 CREATE ROLE complaint_encoder LOGIN;
@@ -653,11 +666,14 @@ GRANT SELECT ON resident_complaint_count_view TO complaint_admin;
 GRANT SELECT ON brgy_clearance_view TO complaint_admin;
 GRANT SELECT ON complaint_details_view TO complaint_admin;
 GRANT SELECT ON official_view TO complaint_admin;
--- ALTER TABLE complaintsc.complaint OWNER TO complaint_admin;
--- ALTER TABLE complaintsc.complainant OWNER TO complaint_admin;
--- ALTER TABLE complaintsc.respondent OWNER TO complaint_admin;
--- ALTER TABLE complaintsc.mediator OWNER TO complaint_admin;
--- ALTER TABLE complaintsc.complaint_archive OWNER TO complaint_admin;
+GRANT USAGE, SELECT ON SEQUENCE resident_resident_id_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_case_no_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complainant_complainant_id_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE respondent_respondent_id_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE mediator_mediator_id_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE complaint_archive_complaint_archive_id_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_official_id_seq TO complaint_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE official_archive_official_archive_id_seq TO complaint_admin;
 
 -- BARANGAY CAPTAIN
 CREATE USER brgy_captain WITH PASSWORD 'Brgy_captain';
